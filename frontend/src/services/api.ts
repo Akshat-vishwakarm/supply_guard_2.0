@@ -20,29 +20,35 @@ import {
 } from '../types/supplyGuard';
 
 /**
- * Single Production API Base URL Configuration:
- * Prioritizes VITE_API_BASE_URL (or VITE_API_URL).
- * Defaults directly to the live production Render backend:
- * https://supply-guard-2-0-2.onrender.com
- * Never falls back to localhost in production.
+ * Production API Environment Configuration
+ * Example:
+ *   const API_URL = import.meta.env.VITE_API_URL;
+ *   fetch(`${API_URL}/api/ports`)
  */
 export const RENDER_PRODUCTION_API_URL = 'https://supply-guard-2-0-2.onrender.com';
+export const LOCAL_DEV_API_URL = 'http://127.0.0.1:8000';
 
-export const getApiBaseUrl = (): string => {
+export const getApiUrl = (): string => {
   const envUrl =
-    (import.meta as any).env?.VITE_API_BASE_URL ||
-    (import.meta as any).env?.VITE_API_URL;
+    (import.meta as any).env?.VITE_API_URL ||
+    (import.meta as any).env?.VITE_API_BASE_URL;
 
-  const rawBase =
-    envUrl && typeof envUrl === 'string' && envUrl.trim()
-      ? envUrl.trim()
-      : RENDER_PRODUCTION_API_URL;
+  if (envUrl && typeof envUrl === 'string' && envUrl.trim()) {
+    // Normalize: strip trailing slash and trailing /api so ${API_URL}/api/... is consistent
+    return envUrl.trim().replace(/\/+$/, '').replace(/\/api$/, '');
+  }
 
-  const cleanUrl = rawBase.replace(/\/+$/, '');
-  return cleanUrl.endsWith('/api') ? cleanUrl : `${cleanUrl}/api`;
+  // Local development fallback
+  if ((import.meta as any).env?.DEV) {
+    return LOCAL_DEV_API_URL;
+  }
+
+  // Production fallback: strictly use Render backend
+  return RENDER_PRODUCTION_API_URL;
 };
 
-export const API_BASE_URL = getApiBaseUrl();
+export const API_URL = getApiUrl();
+export const API_BASE_URL = `${API_URL}/api`;
 
 async function fetchJson<T>(url: string, options?: RequestInit, timeoutMs: number = 60000): Promise<T> {
   const controller = new AbortController();
@@ -99,11 +105,11 @@ async function fetchJson<T>(url: string, options?: RequestInit, timeoutMs: numbe
 
 export const api = {
   checkHealth: async () => {
-    return fetchJson<{ status: string; system: string; dataset_loaded: boolean; is_demo: boolean }>(`${API_BASE_URL}/health`);
+    return fetchJson<{ status: string; system: string; dataset_loaded: boolean; is_demo: boolean }>(`${API_URL}/api/health`);
   },
 
   getPorts: async (): Promise<{ total_ports: number; ports: PortItem[] }> => {
-    return fetchJson<{ total_ports: number; ports: PortItem[] }>(`${API_BASE_URL}/ports`);
+    return fetchJson<{ total_ports: number; ports: PortItem[] }>(`${API_URL}/api/ports`);
   },
 
   getTransitEstimate: async (data: {

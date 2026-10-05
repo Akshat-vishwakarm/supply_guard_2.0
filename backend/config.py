@@ -81,6 +81,8 @@ DEFAULT_CORS_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://supply-guard-2-0.vercel.app",
+    "https://supply-guard-2-0-2.onrender.com",
 ]
 CORS_ORIGINS_ENV = os.getenv("CORS_ORIGINS", "")
 if CORS_ORIGINS_ENV.strip():
