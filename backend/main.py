@@ -79,8 +79,9 @@ app = FastAPI(
     title="Supply Guard 2.0 API",
     description="Deterministic AI/ML Supply Chain Risk Intelligence & Prediction Control Tower API",
     version="2.0.0",
-    docs_url="/docs" if DEBUG else None,
-    redoc_url=None
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json"
 )
 
 # Configure Production CORS
@@ -259,8 +260,20 @@ class ShipmentSimulateRequest(BaseModel):
     city: Optional[str] = None
     prediction_date: Optional[str] = None
 
-# ----------------- Health -----------------
+# ----------------- System & Health -----------------
+@app.get("/")
+def get_root():
+    """Root entrypoint providing service status and navigation links."""
+    return {
+        "service": "Supply Guard 2.0 API",
+        "status": "online",
+        "docs": "/docs",
+        "openapi": "/openapi.json",
+        "health": "/health"
+    }
+
 @app.get("/api/health")
+@app.get("/health")
 def get_health():
     """
     Production health check endpoint conforming to Section 20.
