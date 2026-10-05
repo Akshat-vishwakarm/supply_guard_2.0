@@ -68,14 +68,18 @@ async function fetchJson<T>(url: string, options?: RequestInit, timeoutMs: numbe
       let parsedMsg = `Request failed with status ${response.status} (${response.statusText})`;
       try {
         const json = JSON.parse(errorBody);
-        if (json.error && typeof json.error === 'object' && json.error.message) {
-          parsedMsg = json.error.message;
-        } else if (json.detail) {
-          if (typeof json.detail === 'object' && json.detail.error) {
+        if (json.detail) {
+          if (Array.isArray(json.detail)) {
+            parsedMsg = json.detail
+              .map((d: any) => `${Array.isArray(d.loc) ? d.loc.slice(1).join('.') : 'field'}: ${d.msg}`)
+              .join('; ');
+          } else if (typeof json.detail === 'object' && json.detail.error) {
             parsedMsg = json.detail.error;
           } else if (typeof json.detail === 'string') {
             parsedMsg = json.detail;
           }
+        } else if (json.error && typeof json.error === 'object' && json.error.message) {
+          parsedMsg = json.error.message;
         } else if (json.message) {
           parsedMsg = json.message;
         }

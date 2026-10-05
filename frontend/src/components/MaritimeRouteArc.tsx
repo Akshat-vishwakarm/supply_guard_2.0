@@ -30,8 +30,10 @@ export const MaritimeRouteArc: React.FC<MaritimeRouteArcProps> = ({
   destCountry,
   destLat,
   destLon,
-  distanceKm = 13930,
-  baselineTransitDays = 24.3,
+  distanceKm = 0,
+  baselineTransitDays = 0,
+  originWeather,
+  originWeatherEmoji,
   routeType
 }) => {
   return (
@@ -65,7 +67,7 @@ export const MaritimeRouteArc: React.FC<MaritimeRouteArcProps> = ({
               <span style={{ fontSize: '0.88rem', fontWeight: 400, color: '#FFFFFF' }}>{originPort || originCity}</span>
             </div>
             <span style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', paddingLeft: '1.1rem' }}>
-              LAT {originLat !== undefined ? originLat.toFixed(3) : '-27.469'} / LON {originLon !== undefined ? originLon.toFixed(3) : '+153.025'}
+              {originLat !== undefined && originLon !== undefined ? `LAT ${originLat.toFixed(3)}° / LON ${originLon.toFixed(3)}°` : `${originCity}, ${originCountry}`}
             </span>
           </div>
 
@@ -86,10 +88,10 @@ export const MaritimeRouteArc: React.FC<MaritimeRouteArcProps> = ({
               EQUATORIAL VECTOR
             </span>
             <span style={{ fontSize: '0.95rem', fontFamily: 'var(--font-mono)', color: '#FFFFFF', fontWeight: 400 }}>
-              {distanceKm ? Number(distanceKm).toLocaleString() : '13,930'} km
+              {distanceKm ? `${Number(distanceKm).toLocaleString()} km` : '—'}
             </span>
             <span style={{ fontSize: '0.62rem', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)' }}>
-              {baselineTransitDays} DAYS NOMINAL TRANSIT
+              {baselineTransitDays ? `${baselineTransitDays} DAYS NOMINAL TRANSIT` : 'TRANSIT DERIVED'}
             </span>
           </div>
 
@@ -100,7 +102,7 @@ export const MaritimeRouteArc: React.FC<MaritimeRouteArcProps> = ({
               <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#FFFFFF', border: '2px solid #000000', display: 'inline-block' }} />
             </div>
             <span style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', paddingRight: '1.1rem' }}>
-              LAT {destLat !== undefined ? destLat.toFixed(3) : '-23.960'} / LON {destLon !== undefined ? destLon.toFixed(3) : '-046.333'}
+              {destLat !== undefined && destLon !== undefined ? `LAT ${destLat.toFixed(3)}° / LON ${destLon.toFixed(3)}°` : `${destCity}, ${destCountry}`}
             </span>
           </div>
         </div>
@@ -110,10 +112,10 @@ export const MaritimeRouteArc: React.FC<MaritimeRouteArcProps> = ({
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: '0.75rem', marginTop: '0.5rem', fontSize: '0.68rem', color: 'var(--text-muted)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           <span style={{ textTransform: 'uppercase' }}>
-            Weather Matrix: <strong style={{ color: 'var(--text-secondary)', fontWeight: 400 }}>Pacific Calm (Beaufort 3)</strong>
+            Weather Matrix: <strong style={{ color: 'var(--text-secondary)', fontWeight: 400 }}>{originWeather ? `${originWeatherEmoji || ''} ${originWeather}`.trim() : 'Synchronized'}</strong>
           </span>
           <span style={{ textTransform: 'uppercase' }}>
-            Corridor Sector: <strong style={{ color: 'var(--text-secondary)', fontWeight: 400 }}>{routeType || 'Trans-Pacific Deep-Sea Direct'}</strong>
+            Corridor Sector: <strong style={{ color: 'var(--text-secondary)', fontWeight: 400 }}>{routeType || 'Maritime Deep-Sea Transit'}</strong>
           </span>
         </div>
         <div style={{ fontFamily: 'var(--font-mono)' }}>

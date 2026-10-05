@@ -181,17 +181,17 @@ export const RiskAnalysis: React.FC<RiskAnalysisProps> = ({
   const originCountry = shipment?.origin?.country || activePrediction.origin_country || '';
   const destCountry = shipment?.destination?.country || activePrediction.destination_country || '';
 
-  const departureDate = shipment?.departure_date || activePrediction.departure_date || '2026-10-29';
+  const departureDate = shipment?.departure_date || activePrediction.departure_date || '—';
   const departureTime = shipment?.departure_time || activePrediction.departure_time || '10:00';
-  const arrivalDate = activePrediction.estimated_arrival || '2026-11-27';
+  const arrivalDate = activePrediction.estimated_arrival_date || activePrediction.estimated_arrival || (activePrediction.route_timeline?.arrival_date_str) || '—';
 
-  const score = Number(activePrediction.supply_guard_score ?? 10.7);
-  const disruptionProb = Number(activePrediction.disruption_probability_percent ?? 0.45);
-  const delayDays = Number(activePrediction.predicted_delay_days ?? 5.81);
-  const freightCost = Number(activePrediction.predicted_freight_cost_usd ?? 6323);
-  const distanceKm = Number(activePrediction.distance_km || 13930.9);
-  const transitDays = Number(activePrediction.baseline_transit_days || 24.3);
-  const volumeAtRisk = Number(activePrediction.business_impact?.estimated_volume_at_risk_tonnes || 0);
+  const score = Number(activePrediction.supply_guard_score ?? 0);
+  const disruptionProb = Number(activePrediction.disruption_probability_percent ?? ((activePrediction.disruption_probability ?? 0) * 100));
+  const delayDays = Number(activePrediction.predicted_delay_days ?? 0);
+  const freightCost = Number(activePrediction.predicted_freight_cost_usd ?? 0);
+  const distanceKm = Number(activePrediction.distance_km || 0);
+  const transitDays = Number(activePrediction.baseline_transit_days || 0);
+  const volumeAtRisk = Number(activePrediction.business_impact?.estimated_volume_at_risk_tonnes ?? (activePrediction.businessImpact?.volume_at_risk_tonnes ?? 0));
 
   return (
     <div className="page-container" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -333,7 +333,7 @@ export const RiskAnalysis: React.FC<RiskAnalysisProps> = ({
                 <div>
                   <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block' }}>NAUTICAL DISTANCE</span>
                   <div className="mono" style={{ fontSize: '1.05rem', fontWeight: 300, color: '#FFFFFF' }}>
-                    {distanceKm ? distanceKm.toLocaleString() : '8,840'} <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>km</span>
+                    {distanceKm ? distanceKm.toLocaleString() : '—'} <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>km</span>
                   </div>
                 </div>
               </div>
@@ -398,11 +398,18 @@ export const RiskAnalysis: React.FC<RiskAnalysisProps> = ({
         originPort={originPort}
         originCity={originCity}
         originCountry={originCountry}
+        originLat={activePrediction.origin_latitude ?? (activePrediction.origin?.latitude)}
+        originLon={activePrediction.origin_longitude ?? (activePrediction.origin?.longitude)}
         destPort={destPort}
         destCity={destCity}
         destCountry={destCountry}
+        destLat={activePrediction.destination_latitude ?? (activePrediction.destination?.latitude)}
+        destLon={activePrediction.destination_longitude ?? (activePrediction.destination?.longitude)}
         distanceKm={distanceKm}
         baselineTransitDays={transitDays}
+        originWeather={activePrediction.origin_weather?.weather || activePrediction.origin_weather?.prediction}
+        originWeatherEmoji={activePrediction.origin_weather?.weather_emoji}
+        routeType={activePrediction.trade_route_type || activePrediction.route_type}
       />
 
       {/* ========================================================================= */}

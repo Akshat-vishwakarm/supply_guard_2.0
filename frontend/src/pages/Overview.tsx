@@ -337,46 +337,132 @@ export const Overview: React.FC<OverviewProps> = ({
     e.preventDefault();
     setErrorMsg('');
 
-    if (!supplierCompany.trim() || !customerCompany.trim()) {
-      setErrorMsg('Please enter both origin supplier/consignor and receiving enterprise.');
+    // Auto-resolve port objects if user searched/typed without clicking dropdown
+    let originPortObj = selectedOriginPort;
+    if (!originPortObj && originSearch.trim()) {
+      const q = originSearch.toLowerCase().trim();
+      originPortObj = registeredPorts.find(
+        (p) =>
+          p.port_name.toLowerCase() === q ||
+          p.city.toLowerCase() === q ||
+          p.country.toLowerCase() === q ||
+          `${p.port_name} (${p.city}, ${p.country})`.toLowerCase() === q ||
+          p.port_name.toLowerCase().includes(q) ||
+          p.city.toLowerCase().includes(q) ||
+          q.includes(p.city.toLowerCase()) ||
+          q.includes(p.port_name.toLowerCase())
+      ) || null;
+      if (originPortObj) {
+        setSelectedOriginPort(originPortObj);
+      }
+    }
+
+    let destPortObj = selectedDestPort;
+    if (!destPortObj && destSearch.trim()) {
+      const q = destSearch.toLowerCase().trim();
+      destPortObj = registeredPorts.find(
+        (p) =>
+          p.port_name.toLowerCase() === q ||
+          p.city.toLowerCase() === q ||
+          p.country.toLowerCase() === q ||
+          `${p.port_name} (${p.city}, ${p.country})`.toLowerCase() === q ||
+          p.port_name.toLowerCase().includes(q) ||
+          p.city.toLowerCase().includes(q) ||
+          q.includes(p.city.toLowerCase()) ||
+          q.includes(p.port_name.toLowerCase())
+      ) || null;
+      if (destPortObj) {
+        setSelectedDestPort(destPortObj);
+      }
+    }
+
+    if (!supplierCompany.trim()) {
+      setErrorMsg('Please enter the origin consignor / supplier company.');
       return;
     }
-    if (!selectedOriginPort || !selectedDestPort) {
-      setErrorMsg('Please select valid origin departure and destination arrival ports.');
+    if (!customerCompany.trim()) {
+      setErrorMsg('Please enter the receiving company / enterprise.');
+      return;
+    }
+    if (!productName.trim()) {
+      setErrorMsg('Please enter the commercial product or item description.');
+      return;
+    }
+    const parsedQuantity = parseFloat(quantity);
+    if (!quantity || isNaN(parsedQuantity) || parsedQuantity <= 0) {
+      setErrorMsg('Please enter a valid batch quantity greater than 0.');
+      return;
+    }
+    const parsedWeight = parseFloat(shipmentWeight);
+    if (!shipmentWeight || isNaN(parsedWeight) || parsedWeight <= 0) {
+      setErrorMsg('Please enter a valid gross payload mass / weight greater than 0.');
+      return;
+    }
+    if (!originPortObj) {
+      setErrorMsg('Please select a valid port of departure (origin node) from the directory.');
+      return;
+    }
+    if (!destPortObj) {
+      setErrorMsg('Please select a valid port of entry (destination node) from the directory.');
+      return;
+    }
+    if (!departureDate) {
+      setErrorMsg('Please select a valid departure date.');
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      const payload: any = {
+      const payload: ShipmentRiskRequest = {
         supplier_company: supplierCompany.trim(),
         customer_company: customerCompany.trim(),
         receiving_company: customerCompany.trim(),
-        product_name: productName.trim() || 'Commercial Cargo',
-        quantity: Number(quantity) || 1000,
-        quantity_unit: quantityUnit || 'Units',
-        shipment_weight: Number(shipmentWeight) || 15000,
-        weight_unit: weightUnit || 'kg',
-        commercial_value: Number(shipmentValue) || 500000,
-        shipment_value: Number(shipmentValue) || 500000,
+        product_name: productName.trim(),
+        quantity: parsedQuantity,
+        quantity_unit: quantityUnit.trim() || 'Units',
+        shipment_weight: parsedWeight,
+        weight_unit: weightUnit.trim() || 'kg',
+        commercial_value: shipmentValue ? parseFloat(shipmentValue) : undefined,
+        shipment_value: shipmentValue ? parseFloat(shipmentValue) : undefined,
         currency: currency || 'USD',
-        origin_port: selectedOriginPort.port_name,
-        origin_country: selectedOriginPort.country,
-        origin_city: selectedOriginPort.city,
-        destination_port: selectedDestPort.port_name,
-        destination_country: selectedDestPort.country,
-        destination_city: selectedDestPort.city,
-        departure_date: departureDate || '2026-10-29',
+        origin_port: originPortObj.port_name,
+        origin_country: originPortObj.country,
+        origin_city: originPortObj.city,
+        destination_port: destPortObj.port_name,
+        destination_country: destPortObj.country,
+        destination_city: destPortObj.city,
+        origin: {
+          port: originPortObj.port_name,
+          city: originPortObj.city,
+          country: originPortObj.country,
+          latitude: originPortObj.latitude,
+          longitude: originPortObj.longitude
+        },
+        destination: {
+          port: destPortObj.port_name,
+          city: destPortObj.city,
+          country: destPortObj.country,
+          latitude: destPortObj.latitude,
+          longitude: destPortObj.longitude
+        },
+        departure_date: departureDate,
         departure_time: departureTime || '10:00',
         shipment_status: shipmentStatus,
-        current_delay_days: Number(currentDelayDays) || 0,
+        current_delay_days: shipmentStatus === 'Delayed' ? (parseFloat(currentDelayDays) || 0) : 0,
+        disruption_reason: shipmentStatus === 'Disrupted' ? (disruptionReason.trim() || undefined) : undefined,
         overrides: overrideMode === 'MANUAL' ? {
+          port_congestion: overrideCongestion,
           port_congestion_index: overrideCongestion,
+          weather_risk: overrideWeather,
           weather_disruption_score: overrideWeather,
+          geopolitical_risk: overrideGeopolitical,
           geopolitical_risk_score: overrideGeopolitical,
+          container_availability: overrideContainer,
           container_availability_index: overrideContainer,
+          fuel_cost: overrideFuel,
           fuel_cost_index: overrideFuel,
+          commodity_price: overrideCommodity,
           commodity_price_index: overrideCommodity
         } : {}
       };
@@ -387,7 +473,7 @@ export const Overview: React.FC<OverviewProps> = ({
       }
       onNavigate('risk');
     } catch (err: any) {
-      console.error(err);
+      console.error('Shipment risk evaluation error:', err);
       setErrorMsg(err.message || 'Failed to complete shipment risk evaluation.');
     } finally {
       setIsSubmitting(false);
@@ -801,13 +887,13 @@ export const Overview: React.FC<OverviewProps> = ({
                   <div>
                     <label>GEODESIC DISTANCE</label>
                     <div className="mono" style={{ fontSize: '0.95rem', color: '#FFFFFF' }}>
-                      {transitEstimate?.distance_km ? `${Number(transitEstimate.distance_km).toLocaleString()} km` : '8,840 km'}
+                      {loadingTransit ? 'Calculating...' : (transitEstimate?.distance_km ? `${Number(transitEstimate.distance_km).toLocaleString()} km` : '—')}
                     </div>
                   </div>
                   <div>
                     <label>BASELINE TRANSIT</label>
                     <div className="mono" style={{ fontSize: '0.95rem', color: '#FFFFFF' }}>
-                      {transitEstimate?.baseline_transit_days ? `${transitEstimate.baseline_transit_days} days` : '17.0 days'}
+                      {loadingTransit ? 'Calculating...' : (transitEstimate?.baseline_transit_days ? `${transitEstimate.baseline_transit_days} days` : '—')}
                     </div>
                   </div>
                 </div>
@@ -868,11 +954,19 @@ export const Overview: React.FC<OverviewProps> = ({
                 <div style={{ background: 'rgba(0, 0, 0, 0.35)', padding: '0.65rem', borderRadius: 'var(--radius-xs)', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
                     <span>ORIGIN WEATHER:</span>
-                    <span style={{ color: '#FFFFFF' }}>{originWeatherPreview?.weather || 'Pacific Calm (Beaufort 3)'}</span>
+                    <span style={{ color: '#FFFFFF' }}>
+                      {originWeatherPreview?.prediction
+                        ? `${originWeatherPreview.weather_emoji || ''} ${originWeatherPreview.prediction} (Risk: ${originWeatherPreview.weather_disruption_score}/100)`
+                        : (selectedOriginPort ? 'Fetching forecast...' : 'Select departure port')}
+                    </span>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginTop: '3px' }}>
                     <span>DESTINATION WEATHER:</span>
-                    <span style={{ color: '#FFFFFF' }}>{destWeatherPreview?.weather || 'Optimal Coastal Clear'}</span>
+                    <span style={{ color: '#FFFFFF' }}>
+                      {destWeatherPreview?.prediction
+                        ? `${destWeatherPreview.weather_emoji || ''} ${destWeatherPreview.prediction} (Risk: ${destWeatherPreview.weather_disruption_score}/100)`
+                        : (selectedDestPort ? 'Fetching forecast...' : 'Select arrival port')}
+                    </span>
                   </div>
                 </div>
 

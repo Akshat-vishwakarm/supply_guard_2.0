@@ -11,29 +11,32 @@ export const PredictionTraceVisual: React.FC<PredictionTraceVisualProps> = ({
   activePrediction
 }) => {
   const t = trace || activePrediction?.prediction_trace || activePrediction?.predictionTrace || {};
+  const originStr = activePrediction?.origin_city ? `${activePrediction.origin_city}, ${activePrediction.origin_country}` : (activePrediction?.origin_port || '—');
+  const destStr = activePrediction?.destination_city ? `${activePrediction.destination_city}, ${activePrediction.destination_country}` : (activePrediction?.destination_port || '—');
+
   const userInput = t.user_input || {
-    origin: `${activePrediction?.origin_port || activePrediction?.origin_city || 'Yokohama'}, ${activePrediction?.origin_country || 'Japan'}`,
-    destination: `${activePrediction?.destination_port || activePrediction?.destination_city || 'Los Angeles'}, ${activePrediction?.destination_country || 'United States'}`,
-    departure: `${activePrediction?.departure_date || '2026-10-05'} ${activePrediction?.departure_time || '10:00'}`,
-    cargo: `${activePrediction?.shipment_weight ? Number(activePrediction.shipment_weight).toLocaleString() : '15,000'} kg (${activePrediction?.quantity ? Number(activePrediction.quantity).toLocaleString() : '50,000'} units)`,
+    origin: originStr,
+    destination: destStr,
+    departure: `${activePrediction?.departure_date || '—'} ${activePrediction?.departure_time || ''}`.trim(),
+    cargo: `${activePrediction?.shipment_weight ? Number(activePrediction.shipment_weight).toLocaleString() : '—'} ${activePrediction?.weight_unit || 'kg'} (${activePrediction?.quantity ? Number(activePrediction.quantity).toLocaleString() : '—'} ${activePrediction?.quantity_unit || 'units'})`,
     status: activePrediction?.shipment_status || 'Normal'
   };
 
   const routeEngine = t.route_engine || {
-    distance: activePrediction?.distance_km ? `${Number(activePrediction.distance_km).toLocaleString()} km` : '8,840 km',
-    transit: activePrediction?.baseline_transit_days !== undefined ? `${Number(activePrediction.baseline_transit_days).toFixed(1)} days` : '17.0 days',
-    corridor: activePrediction?.trade_route_type || 'Trans-Pacific East'
+    distance: activePrediction?.distance_km ? `${Number(activePrediction.distance_km).toLocaleString()} km` : '—',
+    transit: activePrediction?.baseline_transit_days !== undefined ? `${Number(activePrediction.baseline_transit_days).toFixed(1)} days` : '—',
+    corridor: activePrediction?.trade_route_type || activePrediction?.route_type || 'Deep-Sea Corridor'
   };
 
   const weatherModel = t.weather_model || {
     model_file: 'weather_final.pkl',
-    origin_weather: activePrediction?.origin_weather ? `${activePrediction.origin_weather.weather || 'Normal'} (${activePrediction.origin_weather.weather_risk ?? 40}/100)` : 'Calm Pacific (35/100)'
+    origin_weather: activePrediction?.origin_weather ? `${activePrediction.origin_weather.weather || activePrediction.origin_weather.prediction || 'Normal'} (${activePrediction.origin_weather.weather_risk ?? activePrediction.origin_weather.weather_disruption_score ?? 0}/100)` : 'Forecast Synchronized'
   };
 
   const mlModels = t.ml_models || {
-    disruption: `LightGBM Disruption Classifier -> P(Disrupt) = ${Number(activePrediction?.disruption_probability_percent ?? 0.45).toFixed(2)}%`,
-    delay: `LightGBM Delay Regressor -> Pred Delay = +${Number(activePrediction?.predicted_delay_days ?? 5.81).toFixed(2)}d`,
-    freight: `LightGBM Cost Regressor -> Pred Rate = $${Number(activePrediction?.predicted_freight_cost_usd ?? 6323).toLocaleString()}`
+    disruption: `LightGBM Disruption Classifier -> P(Disrupt) = ${Number(activePrediction?.disruption_probability_percent ?? ((activePrediction?.disruption_probability ?? 0) * 100)).toFixed(2)}%`,
+    delay: `LightGBM Delay Regressor -> Pred Delay = +${Number(activePrediction?.predicted_delay_days ?? 0).toFixed(2)}d`,
+    freight: `LightGBM Cost Regressor -> Pred Rate = $${Number(activePrediction?.predicted_freight_cost_usd ?? 0).toLocaleString()}`
   };
 
   const stages = [
