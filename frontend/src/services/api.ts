@@ -19,45 +19,82 @@ import {
   ShipmentRiskRequest
 } from '../types/supplyGuard';
 
-const getApiBaseUrl = (): string => {
-  // 1. Check for explicit environment variable configured in Vite/Vercel
-  const envUrl = (import.meta as any).env?.VITE_API_URL;
-  if (envUrl && typeof envUrl === 'string' && envUrl.trim()) {
-    const cleanUrl = envUrl.trim().replace(/\/+$/, '');
-    return cleanUrl.endsWith('/api') ? cleanUrl : `${cleanUrl}/api`;
-  }
+/**
+ * Single Production API Base URL Configuration:
+ * Prioritizes VITE_API_BASE_URL (or VITE_API_URL).
+ * Defaults directly to the live production Render backend:
+ * https://supply-guard-2-0-2.onrender.com
+ * Never falls back to localhost in production.
+ */
+export const RENDER_PRODUCTION_API_URL = 'https://supply-guard-2-0-2.onrender.com';
 
-  // 2. Production Vercel / Web fallback: use relative /api (proxied via vercel.json rewrite)
-  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-    return '/api';
-  }
+export const getApiBaseUrl = (): string => {
+  const envUrl =
+    (import.meta as any).env?.VITE_API_BASE_URL ||
+    (import.meta as any).env?.VITE_API_URL;
 
-  // 3. Local development fallback
-  return 'http://127.0.0.1:8000/api';
+  const rawBase =
+    envUrl && typeof envUrl === 'string' && envUrl.trim()
+      ? envUrl.trim()
+      : RENDER_PRODUCTION_API_URL;
+
+  const cleanUrl = rawBase.replace(/\/+$/, '');
+  return cleanUrl.endsWith('/api') ? cleanUrl : `${cleanUrl}/api`;
 };
 
-const API_BASE_URL = getApiBaseUrl();
+export const API_BASE_URL = getApiBaseUrl();
 
-async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(url, options);
-  if (!response.ok) {
-    const errorBody = await response.text();
-    let parsedMsg = errorBody;
-    try {
-      const json = JSON.parse(errorBody);
-      if (json.error && typeof json.error === 'object' && json.error.message) {
-        parsedMsg = json.error.message;
-      } else if (json.detail) {
-        if (typeof json.detail === 'object' && json.detail.error) {
-          parsedMsg = json.detail.error;
-        } else if (typeof json.detail === 'string') {
-          parsedMsg = json.detail;
+async function fetchJson<T>(url: string, options?: RequestInit, timeoutMs: number = 60000): Promise<T> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+  const requestOptions: RequestInit = {
+    ...options,
+    signal: options?.signal || controller.signal,
+  };
+
+  try {
+    const response = await fetch(url, requestOptions);
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      const errorBody = await response.text();
+      let parsedMsg = `Request failed with status ${response.status} (${response.statusText})`;
+      try {
+        const json = JSON.parse(errorBody);
+        if (json.error && typeof json.error === 'object' && json.error.message) {
+          parsedMsg = json.error.message;
+        } else if (json.detail) {
+          if (typeof json.detail === 'object' && json.detail.error) {
+            parsedMsg = json.detail.error;
+          } else if (typeof json.detail === 'string') {
+            parsedMsg = json.detail;
+          }
+        } else if (json.message) {
+          parsedMsg = json.message;
+        }
+      } catch {
+        if (errorBody && errorBody.length < 250) {
+          parsedMsg = errorBody;
         }
       }
-    } catch {}
-    throw new Error(parsedMsg);
+      throw new Error(parsedMsg);
+    }
+    return (await response.json()) as T;
+  } catch (err: any) {
+    clearTimeout(timeoutId);
+    if (err.name === 'AbortError') {
+      throw new Error(
+        `Backend request timed out after ${timeoutMs / 1000}s. The Render instance may be spinning up; please retry shortly.`
+      );
+    }
+    if (err instanceof TypeError && err.message.toLowerCase().includes('fetch')) {
+      throw new Error(
+        `Unable to reach Supply Guard backend at ${API_BASE_URL}. The Render service may be waking up or temporarily unreachable.`
+      );
+    }
+    throw err;
   }
-  return response.json();
 }
 
 export const api = {
