@@ -11,8 +11,12 @@ Validates:
 
 import pytest
 from fastapi.testclient import TestClient
-from backend.main import app
-from backend.services.risk_engine import get_risk_engine
+try:
+    from main import app
+    from services.risk_engine import get_risk_engine
+except ImportError:
+    from backend.main import app
+    from backend.services.risk_engine import get_risk_engine
 
 client = TestClient(app)
 

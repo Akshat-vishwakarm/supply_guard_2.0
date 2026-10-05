@@ -190,7 +190,13 @@ class IntelligenceEngine:
                 }
 
         # Custom Route Handling via authentic nautical transit calculation
-        from backend.services.port_registry import find_baseline_transit_days, find_port
+        try:
+            from services.port_registry import find_baseline_transit_days, find_port
+        except ImportError:
+            try:
+                from port_registry import find_baseline_transit_days, find_port
+            except ImportError:
+                from backend.services.port_registry import find_baseline_transit_days, find_port
 
         p1 = find_port(origin_city, origin_country)
         p2 = find_port(dest_city, dest_country)

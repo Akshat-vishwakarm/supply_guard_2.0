@@ -2,26 +2,65 @@ import io
 import pandas as pd
 import numpy as np
 from typing import Dict, List, Any, Optional, Set
-from backend.config import (
-    WEEKLY_OPERATIONS_CSV,
-    WEIGHT_DISRUPTION,
-    WEIGHT_DELAY,
-    WEIGHT_RIPPLE,
-    DELAY_NORM_MAX_DAYS,
-    get_risk_level
-)
-from backend.services.model_loader import get_models
-from backend.services.feature_engineering import (
-    FEATURE_COLUMNS,
-    create_supply_guard_features,
-    build_quick_prediction_features,
-    build_historical_prediction_features,
-    compute_simulated_features_from_base
-)
-from backend.services.network_engine import get_network_engine
-from backend.services.recommendation_engine import RecommendationEngine
-from backend.services.weather_prediction import get_weather_predictor
-from backend.services.intelligence_engine import get_intelligence_engine
+try:
+    from config import (
+        WEEKLY_OPERATIONS_CSV,
+        WEIGHT_DISRUPTION,
+        WEIGHT_DELAY,
+        WEIGHT_RIPPLE,
+        DELAY_NORM_MAX_DAYS,
+        get_risk_level
+    )
+except ImportError:
+    from backend.config import (
+        WEEKLY_OPERATIONS_CSV,
+        WEIGHT_DISRUPTION,
+        WEIGHT_DELAY,
+        WEIGHT_RIPPLE,
+        DELAY_NORM_MAX_DAYS,
+        get_risk_level
+    )
+
+try:
+    from services.model_loader import get_models
+    from services.feature_engineering import (
+        FEATURE_COLUMNS,
+        create_supply_guard_features,
+        build_quick_prediction_features,
+        build_historical_prediction_features,
+        compute_simulated_features_from_base
+    )
+    from services.network_engine import get_network_engine
+    from services.recommendation_engine import RecommendationEngine
+    from services.weather_prediction import get_weather_predictor
+    from services.intelligence_engine import get_intelligence_engine
+except ImportError:
+    try:
+        from model_loader import get_models
+        from feature_engineering import (
+            FEATURE_COLUMNS,
+            create_supply_guard_features,
+            build_quick_prediction_features,
+            build_historical_prediction_features,
+            compute_simulated_features_from_base
+        )
+        from network_engine import get_network_engine
+        from recommendation_engine import RecommendationEngine
+        from weather_prediction import get_weather_predictor
+        from intelligence_engine import get_intelligence_engine
+    except ImportError:
+        from backend.services.model_loader import get_models
+        from backend.services.feature_engineering import (
+            FEATURE_COLUMNS,
+            create_supply_guard_features,
+            build_quick_prediction_features,
+            build_historical_prediction_features,
+            compute_simulated_features_from_base
+        )
+        from backend.services.network_engine import get_network_engine
+        from backend.services.recommendation_engine import RecommendationEngine
+        from backend.services.weather_prediction import get_weather_predictor
+        from backend.services.intelligence_engine import get_intelligence_engine
 
 REQUIRED_COLUMNS = [
     "date",
@@ -96,12 +135,28 @@ class RiskEngine:
         ie = get_intelligence_engine()
         wp = get_weather_predictor()
 
-        from backend.services.port_registry import (
-            find_port,
-            calculate_route_timeline,
-            haversine_distance_km,
-            calculate_ocean_transit
-        )
+        try:
+            from services.port_registry import (
+                find_port,
+                calculate_route_timeline,
+                haversine_distance_km,
+                calculate_ocean_transit
+            )
+        except ImportError:
+            try:
+                from port_registry import (
+                    find_port,
+                    calculate_route_timeline,
+                    haversine_distance_km,
+                    calculate_ocean_transit
+                )
+            except ImportError:
+                from backend.services.port_registry import (
+                    find_port,
+                    calculate_route_timeline,
+                    haversine_distance_km,
+                    calculate_ocean_transit
+                )
 
         # 1. Extract and Validate Business / Shipment Parameters
         supplier_company = str(shipment_data.get("supplier_company") or shipment_data.get("my_company") or "").strip()
@@ -903,12 +958,28 @@ class RiskEngine:
         network_engine = get_network_engine()
         rec_engine = RecommendationEngine()
 
-        from backend.services.port_registry import (
-            find_port,
-            find_baseline_transit_days,
-            calculate_route_timeline,
-            deduce_currency_pair
-        )
+        try:
+            from services.port_registry import (
+                find_port,
+                find_baseline_transit_days,
+                calculate_route_timeline,
+                deduce_currency_pair
+            )
+        except ImportError:
+            try:
+                from port_registry import (
+                    find_port,
+                    find_baseline_transit_days,
+                    calculate_route_timeline,
+                    deduce_currency_pair
+                )
+            except ImportError:
+                from backend.services.port_registry import (
+                    find_port,
+                    find_baseline_transit_days,
+                    calculate_route_timeline,
+                    deduce_currency_pair
+                )
 
         mode = str(user_input.get("prediction_mode", "quick")).lower().strip()
         if mode not in ["quick", "historical"]:
@@ -1144,7 +1215,7 @@ class RiskEngine:
             route_id,
             disruption_map,
             origin_country=origin_country,
-            destination_country=destination_country
+            destination_country=dest_country
         )
         ripple_score = net_exposure["ripple_risk_score"]
         network_analysis = {
@@ -1494,8 +1565,16 @@ class RiskEngine:
         s_cost = round(sim_pred_cost, 2)
 
         # Step 6: Recalculate Civil Route Timeline under modified delay
-        from backend.services.port_registry import calculate_route_timeline
-        from backend.services.intelligence_engine import get_intelligence_engine
+        try:
+            from services.port_registry import calculate_route_timeline
+            from services.intelligence_engine import get_intelligence_engine
+        except ImportError:
+            try:
+                from port_registry import calculate_route_timeline
+                from intelligence_engine import get_intelligence_engine
+            except ImportError:
+                from backend.services.port_registry import calculate_route_timeline
+                from backend.services.intelligence_engine import get_intelligence_engine
         ie = get_intelligence_engine()
 
         base_timeline = baseline_res.get("route_timeline")

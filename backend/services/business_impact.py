@@ -1,6 +1,12 @@
 from typing import Dict, List, Any
 import pandas as pd
-from backend.services.risk_engine import get_risk_engine
+try:
+    from services.risk_engine import get_risk_engine
+except ImportError:
+    try:
+        from risk_engine import get_risk_engine
+    except ImportError:
+        from backend.services.risk_engine import get_risk_engine
 
 class BusinessImpactEngine:
     def __init__(self):

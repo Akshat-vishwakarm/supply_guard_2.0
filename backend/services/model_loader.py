@@ -2,15 +2,43 @@ import json
 import joblib
 import warnings
 from pathlib import Path
-from backend.config import (
-    MODEL_DIR,
-    DISRUPTION_MODEL_PKL,
-    DISRUPTION_CONFIG_JSON,
-    DELAY_MODEL_PKL,
-    DELAY_CONFIG_JSON,
-    FREIGHT_COST_MODEL_PKL,
-    FREIGHT_COST_CONFIG_JSON,
-)
+import sys
+import types
+
+try:
+    from config import (
+        MODEL_DIR,
+        DISRUPTION_MODEL_PKL,
+        DISRUPTION_CONFIG_JSON,
+        DELAY_MODEL_PKL,
+        DELAY_CONFIG_JSON,
+        FREIGHT_COST_MODEL_PKL,
+        FREIGHT_COST_CONFIG_JSON,
+    )
+except ImportError:
+    from backend.config import (
+        MODEL_DIR,
+        DISRUPTION_MODEL_PKL,
+        DISRUPTION_CONFIG_JSON,
+        DELAY_MODEL_PKL,
+        DELAY_CONFIG_JSON,
+        FREIGHT_COST_MODEL_PKL,
+        FREIGHT_COST_CONFIG_JSON,
+    )
+
+# Ensure joblib unpickling compatibility across different root environments
+try:
+    from services import feature_engineering as _fe
+except ImportError:
+    import feature_engineering as _fe
+
+sys.modules.setdefault("feature_engineering", _fe)
+sys.modules.setdefault("services.feature_engineering", _fe)
+if "backend" not in sys.modules:
+    sys.modules["backend"] = types.ModuleType("backend")
+if "backend.services" not in sys.modules:
+    sys.modules["backend.services"] = types.ModuleType("backend.services")
+sys.modules["backend.services.feature_engineering"] = _fe
 
 # Suppress sklearn unpickling warning for clean logs
 warnings.filterwarnings("ignore", category=UserWarning)

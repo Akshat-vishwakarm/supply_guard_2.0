@@ -1,17 +1,39 @@
 from typing import Dict, Any, Optional
 import numpy as np
 import pandas as pd
-from backend.config import (
-    WEIGHT_DISRUPTION,
-    WEIGHT_DELAY,
-    WEIGHT_RIPPLE,
-    DELAY_NORM_MAX_DAYS,
-    get_risk_level
-)
-from backend.services.model_loader import get_models
-from backend.services.feature_engineering import compute_simulated_features
-from backend.services.risk_engine import get_risk_engine
-from backend.services.network_engine import get_network_engine
+try:
+    from config import (
+        WEIGHT_DISRUPTION,
+        WEIGHT_DELAY,
+        WEIGHT_RIPPLE,
+        DELAY_NORM_MAX_DAYS,
+        get_risk_level
+    )
+except ImportError:
+    from backend.config import (
+        WEIGHT_DISRUPTION,
+        WEIGHT_DELAY,
+        WEIGHT_RIPPLE,
+        DELAY_NORM_MAX_DAYS,
+        get_risk_level
+    )
+
+try:
+    from services.model_loader import get_models
+    from services.feature_engineering import compute_simulated_features
+    from services.risk_engine import get_risk_engine
+    from services.network_engine import get_network_engine
+except ImportError:
+    try:
+        from model_loader import get_models
+        from feature_engineering import compute_simulated_features
+        from risk_engine import get_risk_engine
+        from network_engine import get_network_engine
+    except ImportError:
+        from backend.services.model_loader import get_models
+        from backend.services.feature_engineering import compute_simulated_features
+        from backend.services.risk_engine import get_risk_engine
+        from backend.services.network_engine import get_network_engine
 
 class ScenarioEngine:
     def __init__(self):

@@ -1,7 +1,10 @@
 import pandas as pd
 import numpy as np
 from typing import Dict, List, Set, Any
-from backend.config import TRADE_ROUTES_CSV
+try:
+    from config import TRADE_ROUTES_CSV
+except ImportError:
+    from backend.config import TRADE_ROUTES_CSV
 
 class NetworkEngine:
     _instance = None

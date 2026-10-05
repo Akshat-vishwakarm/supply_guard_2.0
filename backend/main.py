@@ -1,6 +1,8 @@
 import io
 import os
+import sys
 import logging
+from pathlib import Path
 import pandas as pd
 from typing import Optional, List, Dict, Any, Union
 from fastapi import FastAPI, HTTPException, Request, Query, UploadFile, File
@@ -8,20 +10,63 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
-from backend.config import CORS_ALLOWED_ORIGINS, ENVIRONMENT, DEBUG
-from backend.services.risk_engine import get_risk_engine
-from backend.services.network_engine import get_network_engine
-from backend.services.business_impact import get_business_impact_engine
-from backend.services.scenario_engine import get_scenario_engine
-from backend.services.recommendation_engine import get_recommendation_engine
-from backend.services.gemini_explainer import get_gemini_explainer
-from backend.services.weather_prediction import get_weather_predictor
-from backend.services.port_registry import (
-    get_all_registered_ports,
-    find_baseline_transit_days,
-    deduce_currency_pair,
-    find_port
-)
+# Ensure backend directory and its submodules are discoverable regardless of cwd
+_CURRENT_DIR = Path(__file__).resolve().parent
+_SERVICES_DIR = _CURRENT_DIR / "services"
+_REPO_ROOT = _CURRENT_DIR.parent
+
+for _p in (str(_CURRENT_DIR), str(_SERVICES_DIR), str(_REPO_ROOT)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
+try:
+    from config import CORS_ALLOWED_ORIGINS, ENVIRONMENT, DEBUG
+except ImportError:
+    from backend.config import CORS_ALLOWED_ORIGINS, ENVIRONMENT, DEBUG
+
+try:
+    from services.risk_engine import get_risk_engine
+    from services.network_engine import get_network_engine
+    from services.business_impact import get_business_impact_engine
+    from services.scenario_engine import get_scenario_engine
+    from services.recommendation_engine import get_recommendation_engine
+    from services.gemini_explainer import get_gemini_explainer
+    from services.weather_prediction import get_weather_predictor
+    from services.port_registry import (
+        get_all_registered_ports,
+        find_baseline_transit_days,
+        deduce_currency_pair,
+        find_port
+    )
+except ImportError:
+    try:
+        from risk_engine import get_risk_engine
+        from network_engine import get_network_engine
+        from business_impact import get_business_impact_engine
+        from scenario_engine import get_scenario_engine
+        from recommendation_engine import get_recommendation_engine
+        from gemini_explainer import get_gemini_explainer
+        from weather_prediction import get_weather_predictor
+        from port_registry import (
+            get_all_registered_ports,
+            find_baseline_transit_days,
+            deduce_currency_pair,
+            find_port
+        )
+    except ImportError:
+        from backend.services.risk_engine import get_risk_engine
+        from backend.services.network_engine import get_network_engine
+        from backend.services.business_impact import get_business_impact_engine
+        from backend.services.scenario_engine import get_scenario_engine
+        from backend.services.recommendation_engine import get_recommendation_engine
+        from backend.services.gemini_explainer import get_gemini_explainer
+        from backend.services.weather_prediction import get_weather_predictor
+        from backend.services.port_registry import (
+            get_all_registered_ports,
+            find_baseline_transit_days,
+            deduce_currency_pair,
+            find_port
+        )
 
 # Setup production logging
 logging.basicConfig(
@@ -223,7 +268,13 @@ def get_health():
     """
     models_loaded = False
     try:
-        from backend.services.model_loader import get_models
+        try:
+            from services.model_loader import get_models
+        except ImportError:
+            try:
+                from model_loader import get_models
+            except ImportError:
+                from backend.services.model_loader import get_models
         models = get_models()
         models_loaded = (
             models.disruption_model is not None and
@@ -322,7 +373,13 @@ def get_transit_estimate(req: TransitEstimateRequest):
     Looks up legitimate baseline transit days and distance from trade_routes.csv or maritime physics.
     Also returns deduced currency pairs, route type (Known vs Custom), and timezone information.
     """
-    from backend.services.intelligence_engine import get_intelligence_engine
+    try:
+        from services.intelligence_engine import get_intelligence_engine
+    except ImportError:
+        try:
+            from intelligence_engine import get_intelligence_engine
+        except ImportError:
+            from backend.services.intelligence_engine import get_intelligence_engine
     ie = get_intelligence_engine()
     route_meta = ie.identify_route(
         origin_country=req.origin_country,
@@ -792,4 +849,4 @@ def generate_report():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("backend.main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

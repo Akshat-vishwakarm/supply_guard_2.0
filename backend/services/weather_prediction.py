@@ -5,8 +5,10 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional
-
-from backend.config import WEATHER_MODEL_PKL
+try:
+    from config import WEATHER_MODEL_PKL
+except ImportError:
+    from backend.config import WEATHER_MODEL_PKL
 
 # Path to the trained weather model bundle (robust relative resolution)
 DEFAULT_MODEL_PATH = str(WEATHER_MODEL_PKL)
@@ -79,7 +81,13 @@ class WeatherPredictor:
         if not self.model_available or self.cities_df is None:
             return []
         
-        from backend.services.port_registry import PORT_REGISTRY
+        try:
+            from services.port_registry import PORT_REGISTRY
+        except ImportError:
+            try:
+                from port_registry import PORT_REGISTRY
+            except ImportError:
+                from backend.services.port_registry import PORT_REGISTRY
         locations = []
         seen = set()
         
@@ -146,7 +154,10 @@ class WeatherPredictor:
 
         # 3. Check PORT_REGISTRY for major maritime ports
         try:
-            from backend.services.port_registry import find_port, haversine_distance_km
+            try:
+                from services.port_registry import find_port, haversine_distance_km
+            except ImportError:
+                from port_registry import find_port, haversine_distance_km
             port = find_port(city, country)
             if port and (port.get("latitude") != 0.0 or port.get("longitude") != 0.0):
                 # Find closest reference city in self.cities_df for climatology baseline

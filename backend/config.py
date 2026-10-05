@@ -1,39 +1,61 @@
-from pathlib import Path
 import os
+import sys
+from pathlib import Path
+
+# Bootstrap sys.path so backend and services are always discoverable
+_CURRENT_DIR = Path(__file__).resolve().parent
+_SERVICES_DIR = _CURRENT_DIR / "services"
+_REPO_ROOT = _CURRENT_DIR.parent
+
+for _p in (str(_CURRENT_DIR), str(_SERVICES_DIR), str(_REPO_ROOT)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
 # Project root: parent of backend directory
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = _REPO_ROOT
 
 # Environment mode
 ENVIRONMENT = os.getenv("ENVIRONMENT", "production").lower()
 DEBUG = os.getenv("DEBUG", "false").lower() in ("true", "1", "yes")
 
-# Data directory (environment override or relative to project root)
+# Data directory (environment override or relative to project root / backend)
 DATA_DIR_ENV = os.getenv("DATA_DIR")
 if DATA_DIR_ENV:
     DATA_DIR = Path(DATA_DIR_ENV).resolve()
 else:
-    DATA_DIR = BASE_DIR / "supply datra"
-    if not DATA_DIR.exists():
-        DATA_DIR = Path("supply datra").resolve()
+    _data_candidates = [
+        BASE_DIR / "supply datra",
+        _CURRENT_DIR / "supply datra",
+        Path("supply datra").resolve(),
+        Path("../supply datra").resolve()
+    ]
+    DATA_DIR = next((p for p in _data_candidates if p.exists()), BASE_DIR / "supply datra")
 
-# Models directory (environment override or relative to project root)
+# Models directory (environment override or relative to project root / backend)
 MODEL_DIR_ENV = os.getenv("MODEL_DIR")
 if MODEL_DIR_ENV:
     MODEL_DIR = Path(MODEL_DIR_ENV).resolve()
 else:
-    MODEL_DIR = BASE_DIR / "supply_guard_models"
-    if not MODEL_DIR.exists():
-        MODEL_DIR = Path("supply_guard_models").resolve()
+    _model_candidates = [
+        BASE_DIR / "supply_guard_models",
+        _CURRENT_DIR / "supply_guard_models",
+        Path("supply_guard_models").resolve(),
+        Path("../supply_guard_models").resolve()
+    ]
+    MODEL_DIR = next((p for p in _model_candidates if p.exists()), BASE_DIR / "supply_guard_models")
 
-# Weather model path (environment override or relative to project root)
+# Weather model path (environment override or relative to project root / backend)
 WEATHER_MODEL_PATH_ENV = os.getenv("WEATHER_MODEL_PATH")
 if WEATHER_MODEL_PATH_ENV:
     WEATHER_MODEL_PKL = Path(WEATHER_MODEL_PATH_ENV).resolve()
 else:
-    WEATHER_MODEL_PKL = BASE_DIR / "weather" / "weather_final.pkl"
-    if not WEATHER_MODEL_PKL.exists():
-        WEATHER_MODEL_PKL = Path("weather/weather_final.pkl").resolve()
+    _weather_candidates = [
+        BASE_DIR / "weather" / "weather_final.pkl",
+        _CURRENT_DIR / "weather" / "weather_final.pkl",
+        Path("weather/weather_final.pkl").resolve(),
+        Path("../weather/weather_final.pkl").resolve()
+    ]
+    WEATHER_MODEL_PKL = next((p for p in _weather_candidates if p.exists()), BASE_DIR / "weather" / "weather_final.pkl")
 
 # CSV file paths
 WEEKLY_OPERATIONS_CSV = DATA_DIR / "weekly_route_operations.csv"

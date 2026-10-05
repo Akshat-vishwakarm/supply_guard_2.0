@@ -135,7 +135,13 @@ class RecommendationEngine:
         return recs
 
     def get_all_recommendations(self) -> List[Dict[str, Any]]:
-        from backend.services.risk_engine import get_risk_engine
+        try:
+            from services.risk_engine import get_risk_engine
+        except ImportError:
+            try:
+                from risk_engine import get_risk_engine
+            except ImportError:
+                from backend.services.risk_engine import get_risk_engine
         risk_engine = get_risk_engine()
         routes = risk_engine.get_all_routes_summary()
         all_recs = []
