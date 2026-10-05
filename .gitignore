@@ -1,0 +1,51 @@
+# Environments & Secrets
+.env
+.env.local
+.env.*.local
+*.env
+
+# Dependencies & Builds
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+build/
+
+# Python cache & test files
+__pycache__/
+*/__pycache__/
+*/*/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# System and IDE files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+!.vscode/extensions.json
+.idea/
+
+# Logs & temp files
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Large intermediate training checkpoints (weather_final.pkl is the active production model)
+weather/worldwide_temperature_model.pkl
+weather/worldwide_weather_classifier.pkl
+weather/worldwide_weather_classifier_final.pkl
+
+# Keep production models and datasets tracked
+!supply_guard_models/
+!weather/weather_final.pkl
+!"supply datra/"

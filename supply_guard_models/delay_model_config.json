@@ -1,0 +1,32 @@
+{
+    "model_name": "Supply Guard Shipping Delay Predictor",
+    "version": "1.0",
+    "model_type": "LightGBM Regressor",
+    "target": "shipping_delay_days",
+    "features": [
+        "trade_volume_tonnes",
+        "container_availability_index",
+        "port_congestion_index",
+        "fuel_cost_index",
+        "commodity_price_index",
+        "weather_disruption_score",
+        "geopolitical_risk_score",
+        "congestion_lag_1",
+        "congestion_lag_2",
+        "congestion_rolling_4",
+        "weather_lag_1",
+        "weather_rolling_4",
+        "geopolitical_lag_1",
+        "geopolitical_rolling_4",
+        "container_lag_1",
+        "previous_was_disrupted",
+        "congestion_change_1w",
+        "congestion_change_2w",
+        "weather_change_1w",
+        "geopolitical_change_1w",
+        "container_change_1w"
+    ],
+    "mae": 1.8375512404350598,
+    "rmse": 2.3566859266392037,
+    "r2": 0.4730441170340932
+}

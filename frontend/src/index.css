@@ -1,0 +1,1090 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ==========================================================================
+   SUPPLY GUARD 2.0 // MINIMAL • BLACK • CINEMATIC • GLASS DESIGN SYSTEM
+   Visual System Inspired by Orbital Telemetry & Stitch Glassmorphism
+   95%+ Monochrome Architecture: #000000, #040507, #0A0A0A, #141414, #888888, #CCCCCC, #FFFFFF
+   ========================================================================== */
+
+:root {
+  /* Canvas & Glass Surfaces */
+  --bg-app: #030406;
+  --bg-vignette: rgba(2, 3, 5, 0.65);
+  --bg-glass-base: rgba(10, 10, 10, 0.42);
+  --bg-glass-deep: rgba(6, 8, 12, 0.60);
+  --bg-glass-light: rgba(255, 255, 255, 0.035);
+  --bg-glass-hover: rgba(255, 255, 255, 0.065);
+  --bg-glass-active: rgba(255, 255, 255, 0.09);
+  --bg-floating: rgba(14, 16, 20, 0.78);
+  --bg-input: rgba(0, 0, 0, 0.45);
+
+  /* Hairline Borders & Specular Highlights */
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-glass: rgba(255, 255, 255, 0.09);
+  --border-bright: rgba(255, 255, 255, 0.16);
+  --border-focus: rgba(255, 255, 255, 0.40);
+  --specular-inner: inset 0 1px 0 0 rgba(255, 255, 255, 0.09);
+  --specular-glow: 0 0 20px -4px rgba(255, 255, 255, 0.08);
+
+  /* Typography / 95%+ Monochrome Tone Hierarchy */
+  --text-primary: #FFFFFF;
+  --text-secondary: #CBD5E1;
+  --text-body: #94A3B8;
+  --text-muted: #64748B;
+  --text-dim: #475569;
+
+  /* Restrained Functional Status Accents (No neon, Muted surgical indicators) */
+  --status-low: #10B981;
+  --status-low-bg: rgba(16, 185, 129, 0.10);
+  --status-low-border: rgba(16, 185, 129, 0.25);
+
+  --status-med: #F59E0B;
+  --status-med-bg: rgba(245, 158, 11, 0.10);
+  --status-med-border: rgba(245, 158, 11, 0.25);
+
+  --status-high: #F97316;
+  --status-high-bg: rgba(249, 115, 22, 0.10);
+  --status-high-border: rgba(249, 115, 22, 0.30);
+
+  --status-critical: #EF4444;
+  --status-critical-bg: rgba(239, 68, 68, 0.10);
+  --status-critical-border: rgba(239, 68, 68, 0.30);
+
+  /* Subtle Telemetry Beacon Accent (used strictly for live pulse pings & single primary action) */
+  --accent-beacon: #FFFFFF;
+  --accent-beacon-soft: rgba(255, 255, 255, 0.12);
+  --accent-beacon-border: rgba(255, 255, 255, 0.35);
+
+  /* Legacy mapping aliases so all components work seamlessly */
+  --bg-sidebar: rgba(8, 8, 8, 0.50);
+  --bg-topbar: rgba(8, 8, 8, 0.50);
+  --bg-card: var(--bg-glass-base);
+  --bg-card-subtle: rgba(255, 255, 255, 0.02);
+  --bg-card-hover: rgba(255, 255, 255, 0.05);
+  --border-strong: var(--border-bright);
+  --text-main: var(--text-primary);
+  --accent-cyan: #E2E8F0;
+  --accent-blue: #94A3B8;
+  --accent-purple: #CBD5E1;
+  --risk-low: var(--status-low);
+  --risk-low-bg: var(--status-low-bg);
+  --risk-low-border: var(--status-low-border);
+  --risk-medium: var(--status-med);
+  --risk-medium-bg: var(--status-med-bg);
+  --risk-medium-border: var(--status-med-border);
+  --risk-high: var(--status-high);
+  --risk-high-bg: var(--status-high-bg);
+  --risk-high-border: var(--status-high-border);
+  --risk-critical: var(--status-critical);
+  --risk-critical-bg: var(--status-critical-bg);
+  --risk-critical-border: var(--status-critical-border);
+
+  /* Typography Families */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Dimensions */
+  --sidebar-width: 260px;
+  --topbar-height: 56px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+}
+
+/* ==========================================================================
+   BASE RESET & TYPOGRAPHY
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+}
+
+/* High-contrast crisp monospace for telemetry */
+.mono, .font-mono, [data-mono] {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Scrollbar Minimalist styling */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-xs);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* Selection */
+::selection {
+  background: rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+}
+
+/* ==========================================================================
+   CINEMATIC BACKGROUND SYSTEM
+   ========================================================================== */
+
+.cinematic-bg-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background-color: #020305;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+.cinematic-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: var(--bg-video-opacity, 0.72);
+  filter: contrast(1.12) brightness(0.96);
+  transition: opacity 0.6s ease, filter 0.4s ease;
+  transform: none;
+  -webkit-transform: none;
+}
+
+.cinematic-bg-video.flip-h {
+  transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+}
+
+.cinematic-bg-video.flip-v {
+  transform: scaleY(-1);
+  -webkit-transform: scaleY(-1);
+}
+
+.cinematic-bg-video.flip-both {
+  transform: scale(-1, -1);
+  -webkit-transform: scale(-1, -1);
+}
+
+.cinematic-bg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0.85;
+  transition: opacity 0.6s ease;
+}
+
+.cinematic-bg-canvas.video-active {
+  opacity: 0.30;
+}
+
+.cinematic-vignette-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(circle at 65% 45%, rgba(0, 0, 0, 0.04) 0%, rgba(2, 3, 5, 0.30) 60%, rgba(0, 0, 0, 0.75) 100%);
+}
+
+.cinematic-scanline-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.004) 0px,
+    rgba(255, 255, 255, 0.004) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  opacity: 0.18;
+}
+
+/* ==========================================================================
+   APP CONTAINER & LAYOUT HIERARCHY
+   ========================================================================== */
+
+.app-container {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  min-height: 100vh;
+  background: transparent;
+}
+
+.main-wrapper {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 0;
+  position: relative;
+  z-index: 10;
+}
+
+/* ==========================================================================
+   SMOKED GLASS SIDEBAR
+   ========================================================================== */
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-sidebar);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.45);
+}
+
+.sidebar-logo {
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.sidebar-logo-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.brand-badge {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-glass);
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+}
+
+.brand-title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.brand-sub {
+  font-size: 0.62rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+.live-indicator-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-glass);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-secondary);
+  letter-spacing: 0.08em;
+}
+
+.live-indicator-chip .pulse-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  animation: pulseBeacon 2s infinite ease-in-out;
+}
+
+@keyframes pulseBeacon {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.85); }
+}
+
+.sidebar-section-title {
+  padding: 0.85rem 1rem 0.35rem 1rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+.sidebar-nav {
+  padding: 0.4rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.52rem 0.75rem;
+  border-radius: var(--radius-xs);
+  color: var(--text-body);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 400;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.nav-link:hover {
+  color: #FFFFFF;
+  background: var(--bg-glass-hover);
+  border-color: var(--border-subtle);
+}
+
+.nav-link.active {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-weight: 500;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+}
+
+.nav-link svg {
+  opacity: 0.8;
+  transition: opacity 0.15s ease;
+}
+
+.nav-link:hover svg,
+.nav-link.active svg {
+  opacity: 1;
+}
+
+/* Sidebar Diagnostics Ticker */
+.sidebar-diagnostics {
+  padding: 0.6rem 0.8rem;
+  margin: 0.4rem 0.6rem;
+  border-radius: var(--radius-xs);
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.diag-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.diag-val {
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  font-size: 0.68rem;
+}
+
+.sidebar-footer {
+  padding: 0.75rem 0.8rem;
+  border-top: 1px solid var(--border-subtle);
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.node-signature {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.node-icon-box {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-xs);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glass);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+
+.node-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.node-id {
+  font-family: var(--font-mono);
+  font-size: 0.70rem;
+  font-weight: 500;
+  color: #FFFFFF;
+  letter-spacing: 0.04em;
+}
+
+.node-version {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   SMOKED GLASS TOPBAR
+   ========================================================================== */
+
+.topbar {
+  height: var(--topbar-height);
+  background: var(--bg-topbar);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  max-width: 480px;
+}
+
+.menu-toggle-btn {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--border-glass);
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: var(--radius-xs);
+}
+
+.search-box-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  height: 32px;
+  background: var(--bg-input);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xs);
+  padding: 0 0.75rem 0 2.1rem;
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+  font-size: 0.76rem;
+}
+
+.search-input:focus {
+  border-color: var(--border-bright);
+  background: rgba(0, 0, 0, 0.65);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.date-pill {
+  font-family: var(--font-mono);
+  font-size: 0.70rem;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-glass);
+  padding: 0.28rem 0.65rem;
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================================================
+   BUTTONS (Surgical Monochrome & Stark Beacons)
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.85rem;
+  height: 32px;
+  border-radius: var(--radius-xs);
+  font-size: 0.76rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Primary Stark White Beacon */
+.btn-primary {
+  background: #FFFFFF;
+  color: #000000;
+  border: 1px solid #FFFFFF;
+  font-weight: 600;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.15);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #EEEEEE;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Ghost Glass Secondary */
+.btn-secondary {
+  background: var(--bg-glass-light);
+  border: 1px solid var(--border-bright);
+  color: var(--text-secondary);
+  backdrop-filter: blur(12px);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--bg-glass-hover);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #FFFFFF;
+}
+
+/* Outlined Subtle Danger / Action */
+.btn-outline-danger {
+  background: rgba(239, 68, 68, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #F87171;
+}
+
+.btn-outline-danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.45);
+  color: #FFFFFF;
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: var(--bg-glass-light);
+  border: 1px solid var(--border-glass);
+  color: var(--text-secondary);
+  border-radius: var(--radius-xs);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-icon:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--border-bright);
+  color: #FFFFFF;
+}
+
+/* ==========================================================================
+   SMOKED GLASS CARDS & PANELS
+   ========================================================================== */
+
+.card, .glass-panel {
+  background: var(--bg-glass-base);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-glass);
+  box-shadow: var(--specular-inner), 0 8px 32px rgba(0, 0, 0, 0.35);
+  border-radius: var(--radius-xs);
+  padding: 1.25rem;
+  position: relative;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.card:hover, .glass-panel:hover {
+  border-color: var(--border-bright);
+}
+
+.card-title {
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+  letter-spacing: -0.01em;
+}
+
+.card-title .card-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Floating Sub-Panel inside Cards */
+.sub-panel {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 0.85rem;
+}
+
+/* ==========================================================================
+   PAGE CONTAINER & HEADERS
+   ========================================================================== */
+
+.page-container {
+  padding: 1.5rem 2rem 3rem 2rem;
+  flex: 1;
+  max-width: 1720px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.page-overline {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+.page-title {
+  font-size: 1.45rem;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  font-size: 0.80rem;
+  color: var(--text-body);
+  max-width: 760px;
+  line-height: 1.45;
+}
+
+/* ==========================================================================
+   KPI TILES & TELEMETRY PODS (Inspired by Stitch Screen 1 & 2)
+   ========================================================================== */
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.kpi-card {
+  background: var(--bg-glass-base);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--border-glass);
+  box-shadow: var(--specular-inner);
+  border-radius: var(--radius-xs);
+  padding: 1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 96px;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.kpi-card:hover {
+  background: rgba(14, 14, 14, 0.55);
+  border-color: var(--border-bright);
+}
+
+.kpi-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
+}
+
+.kpi-label {
+  font-size: 0.68rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.kpi-icon-wrap {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-xs);
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+
+.kpi-value {
+  font-family: var(--font-sans);
+  font-size: 1.75rem;
+  font-weight: 300;
+  color: #FFFFFF;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi-subtext {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ==========================================================================
+   STATUS BADGES & MICRO-CHIPS
+   ========================================================================== */
+
+.risk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 2px 7px;
+  height: 20px;
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.risk-badge.LOW, .risk-badge-low {
+  background: var(--status-low-bg);
+  border: 1px solid var(--status-low-border);
+  color: var(--status-low);
+}
+
+.risk-badge.MEDIUM, .risk-badge-medium {
+  background: var(--status-med-bg);
+  border: 1px solid var(--status-med-border);
+  color: var(--status-med);
+}
+
+.risk-badge.HIGH, .risk-badge-high {
+  background: var(--status-high-bg);
+  border: 1px solid var(--status-high-border);
+  color: var(--status-high);
+}
+
+.risk-badge.CRITICAL, .risk-badge-critical {
+  background: var(--status-critical-bg);
+  border: 1px solid var(--status-critical-border);
+  color: var(--status-critical);
+}
+
+/* ==========================================================================
+   TABLES (Dense Tabular View matching Stitch Screen 2)
+   ========================================================================== */
+
+.table-container {
+  overflow-x: auto;
+  border-radius: var(--radius-xs);
+  background: var(--bg-glass-base);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border-glass);
+  box-shadow: var(--specular-inner);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  text-align: left;
+}
+
+.data-table th {
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-muted);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  letter-spacing: 0.10em;
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid var(--border-subtle);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 0.65rem 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--text-secondary);
+}
+
+.data-table tbody tr {
+  transition: background-color 0.12s ease;
+  cursor: pointer;
+}
+
+.data-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.data-table tbody tr:hover td {
+  color: #FFFFFF;
+}
+
+/* ==========================================================================
+   INPUTS & FORM CONTROLS
+   ========================================================================== */
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
+  width: 100%;
+  background: var(--bg-input);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xs);
+  padding: 0.45rem 0.75rem;
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--border-bright);
+  background: rgba(0, 0, 0, 0.65);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+/* Range Sliders (Minimal Surgical Track) */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-xs);
+  background: #FFFFFF;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* Toast Notifications */
+.toast-msg {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+  background: rgba(14, 16, 20, 0.90);
+  backdrop-filter: blur(28px);
+  border: 1px solid var(--border-bright);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.65);
+  color: #FFFFFF;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-xs);
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  animation: slideInToast 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideInToast {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   RESPONSIVE REFELOW & BREAKPOINTS
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 0px;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    width: 260px;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 45;
+  }
+
+  .sidebar-overlay.open {
+    display: block;
+  }
+
+  .main-wrapper {
+    margin-left: 0;
+  }
+
+  .menu-toggle-btn {
+    display: flex;
+  }
+
+  .mobile-brand-mark {
+    display: flex !important;
+  }
+
+  .page-container {
+    padding: 1.25rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .topbar {
+    padding: 0 1rem;
+  }
+
+  .page-title {
+    font-size: 1.2rem;
+  }
+}

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-tertiary-fixed": "#1b1c1c", "on-tertiary-container": "#646464", "secondary-fixed-dim": "#c7c6c6", "surface-dim": "#141313", "primary-fixed-dim": "#c6c6c7", "on-tertiary": "#303030", "inverse-on-surface": "#313030", "tertiary-fixed": "#e4e2e2", "on-secondary": "#303031", "on-primary": "#2f3131", "error": "#ffb4ab", "on-background": "#e5e2e1", "tertiary-fixed-dim": "#c8c6c6", "surface-bright": "#3a3939", "on-surface": "#e5e2e1", "primary-fixed": "#e2e2e2", "secondary-fixed": "#e3e2e2", "secondary-container": "#464747", "on-surface-variant": "#c4c7c8", "surface": "#141313", "surface-container-high": "#2a2a2a", "tertiary-container": "#e4e2e2", "tertiary": "#ffffff", "surface-variant": "#353434", "on-secondary-fixed": "#1b1c1c", "on-secondary-container": "#b5b5b5", "outline": "#8e9192", "background": "#141313", "surface-container-lowest": "#0e0e0e", "inverse-surface": "#e5e2e1", "on-tertiary-fixed-variant": "#464747", "secondary": "#c7c6c6", "on-primary-fixed": "#1a1c1c", "primary-container": "#e2e2e2", "surface-container": "#201f1f", "outline-variant": "#444748", "surface-tint": "#c6c6c7", "on-secondary-fixed-variant": "#464747", "surface-container-low": "#1c1b1b", "surface-container-highest": "#353434", "error-container": "#93000a", "on-error-container": "#ffdad6", "on-error": "#690005", "inverse-primary": "#5d5f5f", "on-primary-fixed-variant": "#454747", "on-primary-container": "#636565", "primary": "#ffffff" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "margin-lg": "2.5rem", "space-xl": "2.5rem", "gutter-lg": "1.5rem", "space-sm": "0.5rem", "space-lg": "1.5rem", "space-xs": "0.25rem", "space-md": "1rem", "gutter": "1rem", "margin": "1.5rem" }, "fontFamily": { "body-md": [ "Inter" ], "label-sm": [ "Inter" ], "headline-lg-mobile": [ "Inter" ], "body-sm": [ "Inter" ], "display": [ "Inter" ], "headline-md": [ "Inter" ], "headline-sm": [ "Inter" ], "body-lg": [ "Inter" ], "label-md": [ "Inter" ], "headline-lg": [ "Inter" ] }, "fontSize": { "body-md": [ "13px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" } ], "label-sm": [ "9px", { "lineHeight": "12px", "letterSpacing": "0.12em", "fontWeight": "600" } ], "headline-lg-mobile": [ "26px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "400" } ], "body-sm": [ "11px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" } ], "display": [ "48px", { "lineHeight": "52px", "letterSpacing": "-0.04em", "fontWeight": "300" } ], "headline-md": [ "22px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "400" } ], "headline-sm": [ "16px", { "lineHeight": "22px", "letterSpacing": "-0.01em", "fontWeight": "500" } ], "body-lg": [ "15px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" } ], "label-md": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "500" } ], "headline-lg": [ "32px", { "lineHeight": "38px", "letterSpacing": "-0.03em", "fontWeight": "400" } ] } } } };</script></head><body class="bg-surface-container-lowest font-body-md text-on-surface antialiased selection:bg-surface-variant selection:text-primary"><div class="fixed inset-0 pointer-events-none z-0 overflow-hidden"><div class="absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-md z-10"></div><div class="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(14,14,14,0.85)_100%)]"></div><div class="w-full h-full bg-surface-dim opacity-30"></div></div><aside class="fixed left-0 top-0 h-full w-64 z-50 flex flex-col justify-between bg-[rgba(10,10,10,0.4)] backdrop-blur-[20px] border-r border-white/[0.06]"><div class="flex flex-col"><div class="h-16 px-margin flex items-center justify-between border-b border-white/[0.04]"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[20px]">shield</span><div class="flex flex-col"><span class="font-headline-sm text-headline-sm uppercase tracking-wider text-primary font-medium leading-none">Supply Guard</span><span class="font-label-sm text-label-sm text-on-surface-variant tracking-[0.16em] uppercase mt-0.5">Tower 2.0</span></div></div><div class="flex items-center gap-1 px-1.5 py-0.5 rounded-[0.125rem] bg-white/[0.03] border border-white/[0.08]"><span class="w-1 h-1 rounded-full bg-primary animate-pulse"></span><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">LIVE</span></div></div><div class="px-space-md py-space-sm"><span class="font-label-sm text-label-sm text-outline uppercase tracking-[0.14em] px-space-xs block">Operational Matrix</span></div><nav class="flex flex-col gap-space-xs px-space-sm" data-active-classes="bg-white/[0.07] border border-white/20 text-primary font-medium"><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[0.125rem] text-on-surface-variant hover:bg-white/[0.04] hover:text-primary transition-all duration-150 border border-transparent" data-path="overview-telemetry" href="#"><span class="material-symbols-outlined text-[18px]">grid_view</span><span class="font-body-md text-body-md">Overview Telemetry</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[0.125rem] text-on-surface-variant hover:bg-white/[0.04] hover:text-primary transition-all duration-150 border border-transparent" data-path="supply-chain-network" href="#"><span class="material-symbols-outlined text-[18px]">hub</span><span class="font-body-md text-body-md">Network Topology</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[0.125rem] text-on-surface-variant hover:bg-white/[0.04] hover:text-primary transition-all duration-150 border border-transparent" data-path="risk-monitoring" href="#"><span class="material-symbols-outlined text-[18px]">warning</span><span class="font-body-md text-body-md">Risk Monitoring</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-2 rounded-[0.125rem] transition-all duration-150 bg-white/[0.07] border border-white/20 text-primary font-medium" data-path="logistics-feed" href="#"><span class="material-symbols-outlined text-[18px]">route</span><span class="font-body-md text-body-md">Logistics Telemetry</span></a><a class="flex items-center gap-space-sm px-space-sm py-2 rounded-[0.125rem] text-on-surface-variant hover:bg-white/[0.04] hover:text-primary transition-all duration-150 border border-transparent" data-path="data-intake" href="#"><span class="material-symbols-outlined text-[18px]">dataset</span><span class="font-body-md text-body-md">Data Intake Engine</span></a></nav><div class="px-space-md pt-space-lg pb-space-sm"><span class="font-label-sm text-label-sm text-outline uppercase tracking-[0.14em] px-space-xs block">System Diagnostics</span></div><div class="flex flex-col gap-space-xs px-space-sm"><div class="px-space-sm py-space-xs flex items-center justify-between border-b border-white/[0.03]"><span class="font-label-sm text-label-sm text-outline uppercase">Latency</span><span class="font-body-sm text-body-sm text-secondary font-mono">14ms</span></div><div class="px-space-sm py-space-xs flex items-center justify-between border-b border-white/[0.03]"><span class="font-label-sm text-label-sm text-outline uppercase">Pipeline</span><span class="font-body-sm text-body-sm text-secondary font-mono">Nominal</span></div><div class="px-space-sm py-space-xs flex items-center justify-between"><span class="font-label-sm text-label-sm text-outline uppercase">Nodes</span><span class="font-body-sm text-body-sm text-secondary font-mono">1,048 sync</span></div></div></div><div class="p-space-sm border-t border-white/[0.04]"><div class="flex items-center gap-space-sm px-space-sm py-2 rounded-[0.125rem] bg-white/[0.02] border border-white/[0.04]"><div class="w-7 h-7 rounded-[0.125rem] bg-surface-container flex items-center justify-center border border-white/[0.08]"><span class="material-symbols-outlined text-secondary text-[16px]">terminal</span></div><div class="flex flex-col flex-1 overflow-hidden"><span class="font-label-sm text-label-sm text-primary tracking-wide truncate">TOWER_CORE_01</span><span class="font-body-sm text-body-sm text-outline truncate text-[10px]">v2.0.4-prod</span></div><span class="material-symbols-outlined text-outline text-[16px]">lock</span></div></div></aside><div class="pl-64 relative z-20 min-h-screen flex flex-col"><header class="fixed top-0 left-64 right-0 h-16 bg-[rgba(10,10,10,0.4)] backdrop-blur-[20px] border-b border-white/[0.06] z-40 flex items-center justify-between px-gutter-lg"><div class="flex items-center gap-space-md"><div class="relative flex items-center w-72"><span class="material-symbols-outlined text-outline text-[18px] absolute left-2.5 pointer-events-none">search</span><input class="w-full h-8 pl-8 pr-3 bg-black/45 backdrop-blur-[12px] border border-white/[0.08] text-primary placeholder-outline text-body-sm font-body-sm rounded-[0.125rem] focus:outline-none focus:border-white/35 transition-all" placeholder="Query shipments, nodes, threats..." type="text"/></div></div><div class="flex items-center gap-space-sm"><button class="h-8 px-3 rounded-[0.125rem] bg-transparent border border-white/[0.10] text-secondary hover:text-primary hover:bg-white/[0.06] hover:border-white/[0.22] font-body-sm text-body-sm flex items-center gap-1.5 transition-all" type="button"><span class="material-symbols-outlined text-[16px]">database</span><span>Load Demo Dataset</span></button><button class="h-8 px-3 rounded-[0.125rem] bg-transparent border border-white/[0.10] text-secondary hover:text-primary hover:bg-white/[0.06] hover:border-white/[0.22] font-body-sm text-body-sm flex items-center gap-1.5 transition-all" type="button"><span class="material-symbols-outlined text-[16px]">upload_file</span><span>Upload Data</span></button><button class="h-8 px-3.5 rounded-[0.125rem] bg-primary text-on-primary font-headline-sm text-body-sm font-medium hover:bg-white hover:shadow-[0_0_12px_rgba(255,255,255,0.15)] flex items-center gap-1.5 transition-all" type="button"><span class="material-symbols-outlined text-[16px]">add</span><span>New Risk Analysis</span></button><div class="h-4 w-[1px] bg-white/[0.08] mx-1"></div><button class="w-8 h-8 rounded-[0.125rem] flex items-center justify-center bg-white/[0.03] border border-white/[0.08] text-secondary hover:text-primary transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">notifications</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="w-full pt-16 flex-1 px-gutter-lg pb-margin-lg"><div class="flex flex-col w-full">
+<div class="relative w-full overflow-hidden mb-space-lg rounded-[0.125rem] bg-surface-container-lowest/40 backdrop-blur-[24px] shadow-sm">
+<div class="relative z-10 px-margin-lg py-space-xl flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs max-w-2xl">
+<div class="flex items-center gap-space-xs mb-1">
+<span class="font-label-sm text-label-sm text-outline tracking-[0.16em] uppercase">SYSTEM DIRECTORY // MATRIX TELEMETRY</span>
+<span class="w-1 h-1 rounded-full bg-outline"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-[0.14em] uppercase bg-surface-variant/30 px-1.5 py-0.5 rounded-[0.125rem]">V2.4 LIVE</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary font-light tracking-tight">Trade Route Directory</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Global transit telemetry, chokepoint threat vectors, and deterministic maritime corridor monitoring.</p>
+</div>
+<div class="flex items-center gap-space-lg self-start md:self-auto">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-[0.14em]">Active Vectors</span>
+<div class="flex items-baseline gap-2 mt-0.5">
+<span class="font-headline-md text-headline-md text-primary font-light">14</span>
+<span class="font-body-sm text-body-sm text-secondary">Lanes Synchronized</span>
+</div>
+</div>
+<div class="w-[1px] h-8 bg-surface-variant/40"></div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-[0.14em]">Mean Risk Index</span>
+<div class="flex items-baseline gap-2 mt-0.5">
+<span class="font-headline-md text-headline-md text-primary font-light">24.8%</span>
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-[0.125rem] bg-secondary"></span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Nominal</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full mb-space-lg p-space-sm rounded-[0.125rem] bg-surface-container-lowest/50 backdrop-blur-[20px] shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-sm">
+<div class="flex flex-1 flex-col sm:flex-row items-center gap-space-sm">
+<div class="relative w-full sm:w-80">
+<span class="material-symbols-outlined text-outline text-[16px] absolute left-3 top-2.5 pointer-events-none">search</span>
+<input class="w-full h-9 pl-9 pr-3 bg-surface-container-lowest/70 backdrop-blur-[12px] text-primary placeholder-outline font-body-sm text-body-sm rounded-[0.125rem] focus:outline-none focus:bg-surface-container-lowest/90 transition-all" id="corridor-search" placeholder="Filter route ID, origin port, destination..." type="text"/>
+</div>
+<div class="relative w-full sm:w-52">
+<select class="w-full h-9 px-3 bg-surface-container-lowest/70 backdrop-blur-[12px] text-secondary font-body-sm text-body-sm rounded-[0.125rem] appearance-none cursor-pointer focus:outline-none focus:text-primary" id="risk-filter">
+<option value="all">All Risk Vectors</option>
+<option value="optimized">Risk: &lt; 20% (Optimized)</option>
+<option value="stable">Risk: 20% - 30% (Stable)</option>
+<option value="elevated">Risk: &gt; 30% (Elevated)</option>
+</select>
+<span class="material-symbols-outlined text-outline text-[16px] absolute right-2.5 top-2.5 pointer-events-none">expand_more</span>
+</div>
+<div class="relative w-full sm:w-56">
+<select class="w-full h-9 px-3 bg-surface-container-lowest/70 backdrop-blur-[12px] text-secondary font-body-sm text-body-sm rounded-[0.125rem] appearance-none cursor-pointer focus:outline-none focus:text-primary" id="basin-filter">
+<option value="all">All Global Basins</option>
+<option value="transpacific">Trans-Pacific</option>
+<option value="asiaeurope">Asia-Europe</option>
+<option value="oceania">Oceania-LATAM</option>
+</select>
+<span class="material-symbols-outlined text-outline text-[16px] absolute right-2.5 top-2.5 pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs self-end lg:self-auto">
+<button class="h-9 px-4 rounded-[0.125rem] bg-surface-container-high/40 hover:bg-surface-container-high text-primary font-body-sm text-body-sm flex items-center gap-2 transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Export Log</span>
+</button>
+<button class="h-9 px-4 rounded-[0.125rem] bg-primary text-on-primary hover:bg-primary-container font-headline-sm text-body-sm font-medium flex items-center gap-1.5 transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">add</span>
+<span>ADD CORRIDOR</span>
+</button>
+</div>
+</div>
+<div class="w-full rounded-[0.125rem] bg-surface-container-lowest/40 backdrop-blur-[24px] shadow-md overflow-hidden mb-space-lg">
+<div class="px-space-md py-space-sm flex items-center justify-between bg-surface-container-low/20">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-[0.14em]">MATRIX INDEX</span>
+<span class="font-body-sm text-body-sm text-secondary font-mono">SEC_TELEMETRY_05</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-outline tracking-[0.12em] uppercase">VIEW MODE: DENSE TABULAR</span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse" id="corridor-table">
+<thead>
+<tr class="bg-surface-container-low/40">
+<th class="py-space-sm px-space-md font-label-sm text-label-sm text-outline uppercase tracking-[0.12em]">CORRIDOR LANE / ROUTE ID</th>
+<th class="py-space-sm px-space-md font-label-sm text-label-sm text-outline uppercase tracking-[0.12em]">BASIN SECTOR</th>
+<th class="py-space-sm px-space-md font-label-sm text-label-sm text-outline uppercase tracking-[0.12em]">DISTANCE</th>
+<th class="py-space-sm px-space-md font-label-sm text-label-sm text-outline uppercase tracking-[0.12em]">EST. TRANSIT</th>
+<th class="py-space-sm px-space-md font-label-sm text-label-sm text-outline uppercase tracking-[0.12em]">DISRUPTION RISK</th>
+<th class="py-space-sm px-space-md font-label-sm text-label-sm text-outline uppercase tracking-[0.12em]">GUARD SCORE</th>
+<th class="py-space-sm px-space-md font-label-sm text-label-sm text-outline uppercase tracking-[0.12em]">TELEMETRY STATUS</th>
+<th class="py-space-sm px-space-md font-label-sm text-label-sm text-outline uppercase tracking-[0.12em] text-right">ACTION</th>
+</tr>
+</thead>
+<tbody class="divide-y-0">
+<tr class="hover:bg-surface-container-high/30 transition-colors group" data-basin="transpacific" data-risk="14.2">
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-primary font-medium tracking-tight">Yokohama → Los Angeles</span>
+<span class="font-body-sm text-body-sm text-outline font-mono mt-0.5">LN-PAC-8921</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-body-md text-body-md text-secondary">Trans-Pacific East</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-body-md text-body-md text-on-surface font-mono">8,840 km</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-body-md text-body-md text-on-surface font-mono">11.4 days</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm w-36">
+<div class="w-16 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 14.2%;"></div>
+</div>
+<span class="font-body-md text-body-md text-primary font-mono">14.2%</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-baseline gap-1">
+<span class="font-body-md text-body-md text-primary font-medium font-mono">94</span>
+<span class="font-body-sm text-body-sm text-outline font-mono">/ 100</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[0.125rem] bg-surface-container-high/40">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm text-primary tracking-widest uppercase">OPTIMIZED</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right">
+<button class="h-7 w-7 rounded-[0.125rem] bg-surface-container-high/20 hover:bg-surface-container-high text-secondary hover:text-primary transition-colors inline-flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px]">chevron_right</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high/30 transition-colors group bg-surface-container-low/10" data-basin="asiaeurope" data-risk="48.7">
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-primary font-medium tracking-tight">Shanghai → Rotterdam</span>
+<span class="font-body-sm text-body-sm text-outline font-mono mt-0.5">LN-EUR-1044</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-body-md text-body-md text-secondary">Asia-Europe West</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-body-md text-body-md text-on-surface font-mono">19,250 km</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-body-md text-body-md text-on-surface font-mono">34.8 days</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm w-36">
+<div class="w-16 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary-fixed-dim" style="width: 48.7%;"></div>
+</div>
+<span class="font-body-md text-body-md text-primary font-mono">48.7%</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-baseline gap-1">
+<span class="font-body-md text-body-md text-primary font-medium font-mono">58</span>
+<span class="font-body-sm text-body-sm text-outline font-mono">/ 100</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[0.125rem] bg-surface-variant/40">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-widest uppercase">HIGH LATENCY</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right">
+<button class="h-7 w-7 rounded-[0.125rem] bg-surface-container-high/20 hover:bg-surface-container-high text-secondary hover:text-primary transition-colors inline-flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px]">chevron_right</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high/30 transition-colors group" data-basin="oceania" data-risk="26.1">
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-primary font-medium tracking-tight">Brisbane → Santos</span>
+<span class="font-body-sm text-body-sm text-outline font-mono mt-0.5">LN-STH-3390</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-body-md text-body-md text-secondary">South Oceania-LATAM</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-body-md text-body-md text-on-surface font-mono">14,620 km</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-body-md text-body-md text-on-surface font-mono">22.1 days</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm w-36">
+<div class="w-16 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 26.1%;"></div>
+</div>
+<span class="font-body-md text-body-md text-primary font-mono">26.1%</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-baseline gap-1">
+<span class="font-body-md text-body-md text-primary font-medium font-mono">83</span>
+<span class="font-body-sm text-body-sm text-outline font-mono">/ 100</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[0.125rem] bg-surface-container-high/40">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase">STABLE PASSAGE</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right">
+<button class="h-7 w-7 rounded-[0.125rem] bg-surface-container-high/20 hover:bg-surface-container-high text-secondary hover:text-primary transition-colors inline-flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px]">chevron_right</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high/30 transition-colors group bg-surface-container-low/10" data-basin="asiaeurope" data-risk="18.9">
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-primary font-medium tracking-tight">Singapore → Antwerp</span>
+<span class="font-body-sm text-body-sm text-outline font-mono mt-0.5">LN-MAL-4410</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-body-md text-body-md text-secondary">Asia-Europe Central</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-body-md text-body-md text-on-surface font-mono">15,310 km</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-body-md text-body-md text-on-surface font-mono">26.0 days</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm w-36">
+<div class="w-16 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 18.9%;"></div>
+</div>
+<span class="font-body-md text-body-md text-primary font-mono">18.9%</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-baseline gap-1">
+<span class="font-body-md text-body-md text-primary font-medium font-mono">89</span>
+<span class="font-body-sm text-body-sm text-outline font-mono">/ 100</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[0.125rem] bg-surface-container-high/40">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm text-primary tracking-widest uppercase">OPTIMIZED</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right">
+<button class="h-7 w-7 rounded-[0.125rem] bg-surface-container-high/20 hover:bg-surface-container-high text-secondary hover:text-primary transition-colors inline-flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px]">chevron_right</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high/30 transition-colors group" data-basin="transpacific" data-risk="21.5">
+<td class="py-space-md px-space-md">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-primary font-medium tracking-tight">Busan → Long Beach</span>
+<span class="font-body-sm text-body-sm text-outline font-mono mt-0.5">LN-PAC-9040</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-body-md text-body-md text-secondary">Trans-Pacific North</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-body-md text-body-md text-on-surface font-mono">9,120 km</span>
+</td>
+<td class="py-space-md px-space-md">
+<span class="font-body-md text-body-md text-on-surface font-mono">12.8 days</span>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-sm w-36">
+<div class="w-16 h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 21.5%;"></div>
+</div>
+<span class="font-body-md text-body-md text-primary font-mono">21.5%</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-baseline gap-1">
+<span class="font-body-md text-body-md text-primary font-medium font-mono">86</span>
+<span class="font-body-sm text-body-sm text-outline font-mono">/ 100</span>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[0.125rem] bg-surface-container-high/40">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-secondary tracking-widest uppercase">STABLE PASSAGE</span>
+</div>
+</td>
+<td class="py-space-md px-space-md text-right">
+<button class="h-7 w-7 rounded-[0.125rem] bg-surface-container-high/20 hover:bg-surface-container-high text-secondary hover:text-primary transition-colors inline-flex items-center justify-center">
+<span class="material-symbols-outlined text-[15px]">chevron_right</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-space-md py-space-sm bg-surface-container-low/30 flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">SHOWING 5 OF 14 ROUTE CORRIDORS</span>
+</div>
+<div class="flex items-center gap-1">
+<button class="h-7 px-2.5 rounded-[0.125rem] bg-surface-container-high/40 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider hover:text-primary">PREV</button>
+<button class="h-7 px-2.5 rounded-[0.125rem] bg-primary text-on-primary font-label-sm text-label-sm font-medium">1</button>
+<button class="h-7 px-2.5 rounded-[0.125rem] bg-surface-container-high/40 text-on-surface-variant font-label-sm text-label-sm uppercase hover:text-primary">2</button>
+<button class="h-7 px-2.5 rounded-[0.125rem] bg-surface-container-high/40 text-on-surface-variant font-label-sm text-label-sm uppercase hover:text-primary">3</button>
+<button class="h-7 px-2.5 rounded-[0.125rem] bg-surface-container-high/40 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider hover:text-primary">NEXT</button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<div class="p-space-lg rounded-[0.125rem] bg-surface-container-lowest/40 backdrop-blur-[20px] shadow-sm flex flex-col justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-[0.14em]">Global Chokepoints</span>
+<span class="material-symbols-outlined text-outline text-[18px]">anchor</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-md text-headline-md text-primary font-light">2</span>
+<span class="font-body-md text-body-md text-secondary">Active Watchpoints</span>
+</div>
+</div>
+<div class="mt-4 pt-space-sm bg-surface-container-low/20 -mx-space-lg px-space-lg -mb-space-lg pb-space-md">
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-primary">Strait of Malacca</span>
+<span class="font-label-sm text-label-sm text-outline uppercase">Moderate Congestion</span>
+</div>
+</div>
+</div>
+<div class="p-space-lg rounded-[0.125rem] bg-surface-container-lowest/40 backdrop-blur-[20px] shadow-sm flex flex-col justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-[0.14em]">Average Guard Score</span>
+<span class="material-symbols-outlined text-outline text-[18px]">verified_user</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-md text-headline-md text-primary font-light">82.1</span>
+<span class="font-body-sm text-body-sm text-outline font-mono">/ 100</span>
+</div>
+</div>
+<div class="mt-4 pt-space-sm bg-surface-container-low/20 -mx-space-lg px-space-lg -mb-space-lg pb-space-md">
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-secondary">Telemetry Drift</span>
+<span class="font-body-sm text-body-sm text-primary font-mono">+3.4 pts vs Prev Mo</span>
+</div>
+</div>
+</div>
+<div class="p-space-lg rounded-[0.125rem] bg-surface-container-lowest/40 backdrop-blur-[20px] shadow-sm flex flex-col justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-[0.14em]">Corridor Automation</span>
+<span class="material-symbols-outlined text-outline text-[18px]">alt_route</span>
+</div>
+<div class="mt-2 flex items-center gap-2">
+<span class="w-2 h-2 rounded-[0.125rem] bg-primary"></span>
+<span class="font-headline-sm text-headline-sm text-primary font-medium">Adaptive Rerouting Active</span>
+</div>
+</div>
+<div class="mt-4 pt-space-sm bg-surface-container-low/20 -mx-space-lg px-space-lg -mb-space-lg pb-space-md">
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-secondary">Dynamic Protocols</span>
+<span class="font-body-sm text-body-sm text-outline font-mono">9 Auto-Steer Rules</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const searchInput = document.getElementById('corridor-search');
+    const riskFilter = document.getElementById('risk-filter');
+    const basinFilter = document.getElementById('basin-filter');
+    const table = document.getElementById('corridor-table');
+    const rows = table.querySelectorAll('tbody tr');
+
+    function filterTable() {
+      const query = (searchInput.value || '').toLowerCase().trim();
+      const riskVal = riskFilter.value;
+      const basinVal = basinFilter.value;
+
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const matchesQuery = !query || text.includes(query);
+
+        const rowBasin = row.getAttribute('data-basin');
+        const matchesBasin = (basinVal === 'all') || (rowBasin === basinVal);
+
+        const riskScore = parseFloat(row.getAttribute('data-risk') || '0');
+        let matchesRisk = true;
+        if (riskVal === 'optimized') {
+          matchesRisk = riskScore < 20;
+        } else if (riskVal === 'stable') {
+          matchesRisk = riskScore >= 20 && riskScore <= 30;
+        } else if (riskVal === 'elevated') {
+          matchesRisk = riskScore > 30;
+        }
+
+        if (matchesQuery && matchesBasin && matchesRisk) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+
+    if (searchInput) searchInput.addEventListener('input', filterTable);
+    if (riskFilter) riskFilter.addEventListener('change', filterTable);
+    if (basinFilter) basinFilter.addEventListener('change', filterTable);
+  })();
+</script></main></div></body></html>
