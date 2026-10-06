@@ -57,7 +57,28 @@ const getInitialPage = (): PageId => {
 export function App() {
   const [currentPage, setCurrentPage] = useState<PageId>(getInitialPage);
   const [selectedRouteId, setSelectedRouteId] = useState<string>('');
-  const [activePrediction, setActivePrediction] = useState<PredictResponse | null>(null);
+  const [activePrediction, setActivePrediction] = useState<any>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = sessionStorage.getItem('active_shipment_prediction');
+        if (saved) return JSON.parse(saved);
+      } catch {}
+    }
+    return null;
+  });
+
+  const handlePredictionChange = (pred: any) => {
+    setActivePrediction(pred);
+    if (typeof window !== 'undefined') {
+      try {
+        if (pred) {
+          sessionStorage.setItem('active_shipment_prediction', JSON.stringify(pred));
+        } else {
+          sessionStorage.removeItem('active_shipment_prediction');
+        }
+      } catch {}
+    }
+  };
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [toastMsg, setToastMsg] = useState<string | null>(null);
@@ -236,7 +257,7 @@ export function App() {
               onLoadDemo={handleLoadDemo}
               isProcessing={isProcessing}
               activePrediction={activePrediction}
-              onPredictionChange={(pred) => setActivePrediction(pred)}
+              onPredictionChange={handlePredictionChange}
             />
           )}
 
@@ -249,7 +270,7 @@ export function App() {
               onLoadDemo={handleLoadDemo}
               isLoaded={isLoaded}
               activePrediction={activePrediction}
-              onPredictionChange={(pred) => setActivePrediction(pred)}
+              onPredictionChange={handlePredictionChange}
             />
           )}
 

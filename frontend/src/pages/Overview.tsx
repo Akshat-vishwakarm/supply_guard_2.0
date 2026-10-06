@@ -36,13 +36,60 @@ import { KpiCard } from '../components/KpiCard';
 import { RiskBadge } from '../components/RiskBadge';
 import { api } from '../services/api';
 
+export const resolvePortFromInput = (search: string, ports: PortItem[]): PortItem | null => {
+  if (!search || !search.trim()) return null;
+  const q = search.toLowerCase().trim();
+  const byCode = ports.find((p) => p.port_code.toLowerCase() === q);
+  if (byCode) return byCode;
+  const byExactCity = ports.find((p) => p.city.toLowerCase() === q);
+  if (byExactCity) return byExactCity;
+  const byExactName = ports.find((p) => p.port_name.toLowerCase() === q);
+  if (byExactName) return byExactName;
+  const byLabel = ports.find(
+    (p) => `${p.port_name} (${p.city}, ${p.country})`.toLowerCase() === q
+  );
+  if (byLabel) return byLabel;
+  const byCityCountry = ports.find(
+    (p) => q.includes(p.city.toLowerCase()) && q.includes(p.country.toLowerCase())
+  );
+  if (byCityCountry) return byCityCountry;
+  const byCityInQ = ports.find((p) => q.includes(p.city.toLowerCase()));
+  if (byCityInQ) return byCityInQ;
+  const byPortName = ports.find(
+    (p) => p.port_name.toLowerCase().includes(q) || q.includes(p.port_name.toLowerCase())
+  );
+  if (byPortName) return byPortName;
+  const tokens = q.split(/[\s,]+/).filter(Boolean);
+  if (tokens.length > 0) {
+    const byTokens = ports.find((p) => {
+      const full = `${p.port_name} ${p.city} ${p.country} ${p.port_code}`.toLowerCase();
+      return tokens.every((t) => full.includes(t));
+    });
+    if (byTokens) return byTokens;
+  }
+  return null;
+};
+
+export const filterPorts = (search: string, ports: PortItem[]): PortItem[] => {
+  if (!search || !search.trim()) return ports;
+  const q = search.toLowerCase().trim();
+  const tokens = q.split(/[\s,]+/).filter(Boolean);
+  return ports.filter((p) => {
+    const full = `${p.port_name} ${p.city} ${p.country} ${p.port_code}`.toLowerCase();
+    if (full.includes(q) || q.includes(p.city.toLowerCase()) || q.includes(p.port_name.toLowerCase())) {
+      return true;
+    }
+    return tokens.every((t) => full.includes(t));
+  });
+};
+
 const VALIDATION_SHIPMENT: ShipmentRiskRequest = {
   supplier_company: 'Maersk Line Logix',
   customer_company: 'Apex Advanced Manufacturing',
   receiving_company: 'Apex Advanced Manufacturing',
   product_name: 'Lithium-Ion Polymer Cathode Assemblies (Class 9 HazMat)',
-  quantity: 50,
-  quantity_unit: 'TEU ISO-Spec',
+  quantity: 500,
+  quantity_unit: 'Units',
   shipment_weight: 15000,
   weight_unit: 'kg',
   commercial_value: 5000000,
@@ -54,7 +101,7 @@ const VALIDATION_SHIPMENT: ShipmentRiskRequest = {
   origin_city: 'Yokohama',
   destination_country: 'United States',
   destination_city: 'Los Angeles',
-  departure_date: '2026-10-29',
+  departure_date: '2026-10-10',
   departure_time: '10:00',
   shipment_status: 'Normal',
   current_delay_days: 0,
@@ -138,7 +185,7 @@ export const Overview: React.FC<OverviewProps> = ({
   const [loadingTransit, setLoadingTransit] = useState<boolean>(false);
 
   // Section C: Shipment Schedule
-  const [departureDate, setDepartureDate] = useState<string>('2026-10-29');
+  const [departureDate, setDepartureDate] = useState<string>('2026-10-10');
   const [departureTime, setDepartureTime] = useState<string>('10:00');
 
   // Section D: Shipment Status
@@ -173,8 +220,6 @@ export const Overview: React.FC<OverviewProps> = ({
       try {
         const res = await api.getPorts();
         setRegisteredPorts(res.ports);
-
-        // Fresh state on startup - ports loaded for directory selection without auto-populating fields
       } catch (err) {
         console.error('Failed to load ports directory:', err);
       } finally {
@@ -233,13 +278,15 @@ export const Overview: React.FC<OverviewProps> = ({
         })
         .then((res) => setOriginWeatherPreview(res))
         .catch(() => setOriginWeatherPreview(null));
+    } else {
+      setOriginWeatherPreview(null);
     }
 
-    if (selectedDestPort && transitEstimate) {
+    if (selectedDestPort) {
       const dep = new Date(`${departureDate}T${departureTime || '10:00'}:00`);
-      const transitDays = transitEstimate.baseline_transit_days || 17;
+      const transitDays = transitEstimate?.baseline_transit_days || 17.2;
       const arr = new Date(dep.getTime() + transitDays * 24 * 60 * 60 * 1000);
-      const arrDateStr = arr.toISOString().split('T')[0];
+      const arrDateStr = !isNaN(arr.getTime()) ? arr.toISOString().split('T')[0] : departureDate;
 
       api
         .predictWeather({
@@ -249,6 +296,8 @@ export const Overview: React.FC<OverviewProps> = ({
         })
         .then((res) => setDestWeatherPreview(res))
         .catch(() => setDestWeatherPreview(null));
+    } else {
+      setDestWeatherPreview(null);
     }
   }, [selectedOriginPort, selectedDestPort, departureDate, departureTime, transitEstimate]);
 
@@ -262,7 +311,7 @@ export const Overview: React.FC<OverviewProps> = ({
     setWeightUnit(VALIDATION_SHIPMENT.weight_unit || 'kg');
     setShipmentValue(String(VALIDATION_SHIPMENT.shipment_value || 5000000));
     setCurrency(VALIDATION_SHIPMENT.currency || 'USD');
-    setDepartureDate('2026-10-29');
+    setDepartureDate('2026-10-10');
     setDepartureTime('10:00');
     setShipmentStatus('Normal');
     const yoko = registeredPorts.find((p) => p.city.toLowerCase() === 'yokohama');
@@ -318,63 +367,31 @@ export const Overview: React.FC<OverviewProps> = ({
     setErrorMsg('');
   };
 
-  const filteredOriginPorts = registeredPorts.filter(
-    (p) =>
-      p.port_name.toLowerCase().includes(originSearch.toLowerCase()) ||
-      p.city.toLowerCase().includes(originSearch.toLowerCase()) ||
-      p.country.toLowerCase().includes(originSearch.toLowerCase())
-  );
+  const filteredOriginPorts = filterPorts(originSearch, registeredPorts);
+  const filteredDestPorts = filterPorts(destSearch, registeredPorts);
 
-  const filteredDestPorts = registeredPorts.filter(
-    (p) =>
-      p.port_name.toLowerCase().includes(destSearch.toLowerCase()) ||
-      p.city.toLowerCase().includes(destSearch.toLowerCase()) ||
-      p.country.toLowerCase().includes(destSearch.toLowerCase())
-  );
+  const handleOriginChange = (val: string) => {
+    setOriginSearch(val);
+    setShowOriginDropdown(true);
+    const matched = resolvePortFromInput(val, registeredPorts);
+    setSelectedOriginPort(matched);
+  };
+
+  const handleDestChange = (val: string) => {
+    setDestSearch(val);
+    setShowDestDropdown(true);
+    const matched = resolvePortFromInput(val, registeredPorts);
+    setSelectedDestPort(matched);
+  };
 
   // Execute Main Action: [ ANALYZE SHIPMENT RISK ]
   const handleAnalyzeShipment = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
-    // Auto-resolve port objects if user searched/typed without clicking dropdown
-    let originPortObj = selectedOriginPort;
-    if (!originPortObj && originSearch.trim()) {
-      const q = originSearch.toLowerCase().trim();
-      originPortObj = registeredPorts.find(
-        (p) =>
-          p.port_name.toLowerCase() === q ||
-          p.city.toLowerCase() === q ||
-          p.country.toLowerCase() === q ||
-          `${p.port_name} (${p.city}, ${p.country})`.toLowerCase() === q ||
-          p.port_name.toLowerCase().includes(q) ||
-          p.city.toLowerCase().includes(q) ||
-          q.includes(p.city.toLowerCase()) ||
-          q.includes(p.port_name.toLowerCase())
-      ) || null;
-      if (originPortObj) {
-        setSelectedOriginPort(originPortObj);
-      }
-    }
-
-    let destPortObj = selectedDestPort;
-    if (!destPortObj && destSearch.trim()) {
-      const q = destSearch.toLowerCase().trim();
-      destPortObj = registeredPorts.find(
-        (p) =>
-          p.port_name.toLowerCase() === q ||
-          p.city.toLowerCase() === q ||
-          p.country.toLowerCase() === q ||
-          `${p.port_name} (${p.city}, ${p.country})`.toLowerCase() === q ||
-          p.port_name.toLowerCase().includes(q) ||
-          p.city.toLowerCase().includes(q) ||
-          q.includes(p.city.toLowerCase()) ||
-          q.includes(p.port_name.toLowerCase())
-      ) || null;
-      if (destPortObj) {
-        setSelectedDestPort(destPortObj);
-      }
-    }
+    // Auto-resolve port objects from user input or selection
+    const originPortObj = selectedOriginPort || resolvePortFromInput(originSearch, registeredPorts);
+    const destPortObj = selectedDestPort || resolvePortFromInput(destSearch, registeredPorts);
 
     if (!supplierCompany.trim()) {
       setErrorMsg('Please enter the origin consignor / supplier company.');
@@ -398,18 +415,44 @@ export const Overview: React.FC<OverviewProps> = ({
       setErrorMsg('Please enter a valid gross payload mass / weight greater than 0.');
       return;
     }
-    if (!originPortObj) {
-      setErrorMsg('Please select a valid port of departure (origin node) from the directory.');
+    if (!originSearch.trim() && !originPortObj) {
+      setErrorMsg('Please enter or select an origin port of departure.');
       return;
     }
-    if (!destPortObj) {
-      setErrorMsg('Please select a valid port of entry (destination node) from the directory.');
+    if (!destSearch.trim() && !destPortObj) {
+      setErrorMsg('Please enter or select a destination port of entry.');
       return;
     }
     if (!departureDate) {
       setErrorMsg('Please select a valid departure date.');
       return;
     }
+
+    const resolvedOrigin = originPortObj || {
+      port_code: 'CUSTOM',
+      port_name: originSearch.trim(),
+      city: originSearch.split(',')[0].trim(),
+      country: originSearch.split(',')[1]?.trim() || 'Unknown',
+      latitude: 0,
+      longitude: 0,
+      timezone: 'UTC',
+      currency: currency || 'USD',
+      tz_abbr: 'UTC',
+      display_label: originSearch.trim()
+    };
+
+    const resolvedDest = destPortObj || {
+      port_code: 'CUSTOM',
+      port_name: destSearch.trim(),
+      city: destSearch.split(',')[0].trim(),
+      country: destSearch.split(',')[1]?.trim() || 'Unknown',
+      latitude: 0,
+      longitude: 0,
+      timezone: 'UTC',
+      currency: currency || 'USD',
+      tz_abbr: 'UTC',
+      display_label: destSearch.trim()
+    };
 
     setIsSubmitting(true);
 
@@ -426,25 +469,25 @@ export const Overview: React.FC<OverviewProps> = ({
         commercial_value: shipmentValue ? parseFloat(shipmentValue) : undefined,
         shipment_value: shipmentValue ? parseFloat(shipmentValue) : undefined,
         currency: currency || 'USD',
-        origin_port: originPortObj.port_name,
-        origin_country: originPortObj.country,
-        origin_city: originPortObj.city,
-        destination_port: destPortObj.port_name,
-        destination_country: destPortObj.country,
-        destination_city: destPortObj.city,
+        origin_port: resolvedOrigin.port_name,
+        origin_country: resolvedOrigin.country,
+        origin_city: resolvedOrigin.city,
+        destination_port: resolvedDest.port_name,
+        destination_country: resolvedDest.country,
+        destination_city: resolvedDest.city,
         origin: {
-          port: originPortObj.port_name,
-          city: originPortObj.city,
-          country: originPortObj.country,
-          latitude: originPortObj.latitude,
-          longitude: originPortObj.longitude
+          port: resolvedOrigin.port_name,
+          city: resolvedOrigin.city,
+          country: resolvedOrigin.country,
+          latitude: resolvedOrigin.latitude,
+          longitude: resolvedOrigin.longitude
         },
         destination: {
-          port: destPortObj.port_name,
-          city: destPortObj.city,
-          country: destPortObj.country,
-          latitude: destPortObj.latitude,
-          longitude: destPortObj.longitude
+          port: resolvedDest.port_name,
+          city: resolvedDest.city,
+          country: resolvedDest.country,
+          latitude: resolvedDest.latitude,
+          longitude: resolvedDest.longitude
         },
         departure_date: departureDate,
         departure_time: departureTime || '10:00',
@@ -768,10 +811,7 @@ export const Overview: React.FC<OverviewProps> = ({
                   <input
                     type="text"
                     value={originSearch}
-                    onChange={(e) => {
-                      setOriginSearch(e.target.value);
-                      setShowOriginDropdown(true);
-                    }}
+                    onChange={(e) => handleOriginChange(e.target.value)}
                     onFocus={() => setShowOriginDropdown(true)}
                     placeholder="Search departure port (e.g. Yokohama, Shanghai)..."
                   />
@@ -808,7 +848,7 @@ export const Overview: React.FC<OverviewProps> = ({
                             setShowOriginDropdown(false);
                           }}
                         >
-                          <span style={{ color: '#FFFFFF' }}>{p.port_name}</span>
+                          <span style={{ color: '#FFFFFF' }}>{p.port_name} ({p.city}, {p.country})</span>
                           <span className="mono" style={{ color: 'var(--text-muted)' }}>{p.port_code}</span>
                         </div>
                       ))}
@@ -828,10 +868,7 @@ export const Overview: React.FC<OverviewProps> = ({
                   <input
                     type="text"
                     value={destSearch}
-                    onChange={(e) => {
-                      setDestSearch(e.target.value);
-                      setShowDestDropdown(true);
-                    }}
+                    onChange={(e) => handleDestChange(e.target.value)}
                     onFocus={() => setShowDestDropdown(true)}
                     placeholder="Search arrival port (e.g. Los Angeles, Santos)..."
                   />
@@ -868,7 +905,7 @@ export const Overview: React.FC<OverviewProps> = ({
                             setShowDestDropdown(false);
                           }}
                         >
-                          <span style={{ color: '#FFFFFF' }}>{p.port_name}</span>
+                          <span style={{ color: '#FFFFFF' }}>{p.port_name} ({p.city}, {p.country})</span>
                           <span className="mono" style={{ color: 'var(--text-muted)' }}>{p.port_code}</span>
                         </div>
                       ))}
@@ -949,6 +986,32 @@ export const Overview: React.FC<OverviewProps> = ({
                     <option value="Disrupted">Disrupted — Bottleneck Diverted</option>
                   </select>
                 </div>
+
+                {shipmentStatus === 'Delayed' && (
+                  <div>
+                    <label>CURRENT ACCRUED DELAY (DAYS)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      step={0.5}
+                      value={currentDelayDays}
+                      onChange={(e) => setCurrentDelayDays(e.target.value)}
+                      placeholder="e.g. 3.5"
+                    />
+                  </div>
+                )}
+
+                {shipmentStatus === 'Disrupted' && (
+                  <div>
+                    <label>DISRUPTION EVENT REASON</label>
+                    <input
+                      type="text"
+                      value={disruptionReason}
+                      onChange={(e) => setDisruptionReason(e.target.value)}
+                      placeholder="e.g. Typhoon avoidance route diversion"
+                    />
+                  </div>
+                )}
 
                 {/* Weather Preview readout */}
                 <div style={{ background: 'rgba(0, 0, 0, 0.35)', padding: '0.65rem', borderRadius: 'var(--radius-xs)', border: '1px solid rgba(255, 255, 255, 0.05)' }}>

@@ -147,11 +147,22 @@ export const api = {
   },
 
   analyzeShipment: async (data: any): Promise<any> => {
-    return fetchJson(`${API_BASE_URL}/analyze-shipment`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
+    try {
+      return await fetchJson(`${API_BASE_URL}/shipment/analyze`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    } catch (err: any) {
+      if (err.message && err.message.includes('404')) {
+        return await fetchJson(`${API_BASE_URL}/analyze-shipment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+      }
+      throw err;
+    }
   },
 
   simulateShipment: async (data: {
